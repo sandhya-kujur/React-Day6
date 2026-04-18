@@ -1,0 +1,233 @@
+.user-request-container {
+    padding: 20px;
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.search-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eeeeee;
+}
+
+.radio-group {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    position: relative;
+    padding-left: 30px;
+}
+
+.radio-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-radio {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.radio-label:hover input ~ .custom-radio {
+    border-color: #8b0000;
+}
+
+.radio-label input:checked ~ .custom-radio {
+    border-color: #8b0000;
+}
+
+.custom-radio:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.radio-label input:checked ~ .custom-radio:after {
+    display: block;
+}
+
+.radio-label .custom-radio:after {
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #8b0000;
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.form-field {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-field label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background-color: #fff;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #666;
+    z-index: 1;
+}
+
+.form-field input, 
+.form-field select {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #fff;
+}
+
+.form-field input:focus, 
+.form-field select:focus {
+    border-color: #8b0000;
+}
+
+/* Error Styles */
+.form-field.has-error input {
+    border-color: #ff0000;
+}
+
+.form-field.has-error label {
+    color: #ff0000 !important;
+}
+
+.error-message {
+    display: block;
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 5px;
+    position: absolute;
+    bottom: -18px;
+    left: 5px;
+}
+
+/* Floating Label Specifics */
+.floating-label-field {
+    position: relative;
+    margin-top: 10px;
+}
+
+.floating-label-field label {
+    position: absolute;
+    left: 15px;
+    top: 14px; /* Inside the box */
+    font-size: 14px;
+    color: #999;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background-color: transparent;
+    padding: 0;
+}
+
+.floating-label-field.floated label {
+    top: -10px;
+    left: 12px;
+    font-size: 12px;
+    color: #666;
+    background-color: #fff;
+    padding: 0 5px;
+}
+
+.floating-label-field input::placeholder {
+    color: transparent;
+    transition: color 0.2s;
+}
+
+.floating-label-field input:focus::placeholder {
+    color: #bbb;
+}
+
+.search-form-username {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.search-form-username .form-field {
+    max-width: 400px;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.submit-btn {
+    background-color: #8b0000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 35px;
+    height: 45px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #700000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .submit-btn {
+        margin-left: 0;
+        width: 100%;
+    }
+}

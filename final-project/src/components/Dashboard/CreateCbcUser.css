@@ -1,0 +1,270 @@
+.create-cbc-user-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 20px 32px 36px;
+    background-color: #f5f5f5;
+}
+
+.page-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+.breadcrumb-separator {
+    color: #8b0000;
+}
+
+.breadcrumb-active {
+    color: #8b0000;
+}
+
+.create-cbc-card {
+    width: 100%;
+    margin-top: 8px;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+.create-cbc-form {
+    width: 100%;
+}
+
+.fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.field-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.field-item.full-span {
+    grid-column: span 2;
+}
+
+.field-item label {
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.required {
+    color: #d21e1e;
+}
+
+.field-item input,
+.select-input select,
+.telephone-field {
+    width: 100%;
+    min-height: 56px;
+    padding: 0 18px;
+    border: 1px solid #d7d7d7;
+    border-radius: 12px;
+    background-color: #fff;
+    color: #2f2f2f;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field-item input::placeholder,
+.telephone-field::placeholder {
+    color: #9b9b9b;
+}
+
+.field-item input:focus,
+.select-input select:focus,
+.telephone-field:focus {
+    border-color: #8b0000;
+    box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.12);
+}
+
+.select-input {
+    position: relative;
+}
+
+.select-input select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.select-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b6b6b;
+    pointer-events: none;
+}
+
+.telephone-group .telephone-row {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 16px;
+}
+
+.upload-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.upload-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-item label {
+    color: #1f1f1f;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.upload-box {
+    min-height: 100px;
+    border: 1px dashed #9b9b9b;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    text-align: center;
+    color: #7a7a7a;
+    background-color: #fafafa;
+}
+
+.upload-icon {
+    font-size: 22px;
+    color: #8b0000;
+}
+
+.upload-box p {
+    margin: 0;
+    font-size: 14px;
+    color: #7a7a7a;
+}
+
+.terms-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 34px;
+    align-items: flex-start;
+}
+
+.terms-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #d7d7d7;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+.terms-checkbox input {
+    position: absolute;
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.terms-checkbox span {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.terms-checkbox input:checked + span {
+    background-color: #8b0000;
+    border-radius: 4px;
+}
+
+.terms-row p {
+    margin: 0;
+    color: #5b5b5b;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.actions-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.primary-button,
+.secondary-button {
+    min-width: 140px;
+    min-height: 50px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.primary-button {
+    background-color: #8b0000;
+    border: none;
+    color: white;
+}
+
+.primary-button:hover {
+    background-color: #6a0000;
+}
+
+.secondary-button {
+    background-color: transparent;
+    border: 1px solid #8b0000;
+    color: #8b0000;
+}
+
+.secondary-button:hover {
+    background-color: rgba(139, 0, 0, 0.08);
+}
+
+@media (max-width: 1100px) {
+    .fields-grid,
+    .upload-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field-item.full-span {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 720px) {
+    .create-cbc-user-page {
+        padding: 20px;
+    }
+
+    .create-cbc-card {
+        padding: 24px;
+    }
+
+    .actions-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

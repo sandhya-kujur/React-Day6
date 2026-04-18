@@ -1,0 +1,390 @@
+/* Fixed full-screen layout with no page scrolling */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.login-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 32px 60px 10px;
+}
+
+.login-header img.logo {
+    width: 320px;
+    height: 42px;
+    object-fit: contain;
+    display: block;
+}
+
+.login-content {
+    display: flex;
+    flex: 1;
+    gap: 60px;
+    padding: 0 60px 40px;
+    overflow: hidden;
+}
+
+.login-image-section {
+    flex: 1.2;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f2ef;
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.image-placeholder {
+    width: 288%;
+    height: 217%;
+    min-height: 520px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-placeholder img {
+    width: 288px;
+    height: 217.33px;
+    object-fit: contain;
+    display: block;
+    font-family: Roboto,serif;
+}
+
+.login-form-section {
+    flex: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 360px;
+    padding-right: 32px;
+    font-family: Roboto, serif;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 460px;
+}
+
+.form-wrapper h2 {
+    font-size: 48px;
+    color: #050505;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    color: #4f5f78;
+    margin-bottom: 36px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.input-group {
+    margin-bottom: 22px;
+    position: relative;
+}
+
+.input-group input {
+    width: 100%;
+    min-height: 56px;
+    padding: 16px 18px;
+    border: 1px solid #d5d5d5;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1f1f1f;
+    background-color: transparent;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group .input-label {
+    position: absolute;
+    left: 14px;
+    top: 17px;
+    font-size: 16px;
+    color: #4f5f78;
+    pointer-events: none;
+    background-color: #ffffff;
+    padding: 0 4px;
+    transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease, top 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group.focused input {
+    border-color: #3b61ff !important;
+}
+
+.input-group .input-label {
+    position: absolute;
+    left: 14px;
+    top: 17px;
+    font-size: 16px;
+    color: #4f5f78;
+    pointer-events: none;
+    background-color: #ffffff;
+    padding: 0 4px;
+    transition: all 0.2s ease;
+}
+
+.input-group.focused .input-label,
+.input-group.filled .input-label {
+    top: -9px;
+    font-size: 13px;
+    color: #3b61ff !important;
+    font-weight: 600;
+}
+
+.input-group.filled:not(.focused) .input-label {
+    color: #4f5f78; /* Label turns neutral when filled but not focused */
+}
+
+/* Error States - Specificity increased to override :invalid pseudo-classes */
+.input-group.error input,
+.input-group.error input:invalid {
+    border-color: #e53935;
+    box-shadow: none;
+}
+
+.input-group.error.focused input {
+    border-color: #3b61ff; /* Focus overrides error color */
+}
+
+.input-group.error .input-label {
+    color: #e53935 !important;
+}
+
+.input-group.error.focused .input-label {
+    color: #3b61ff !important;
+}
+
+.error-message {
+    color: #e53935;
+    font-size: 14px;
+    margin-top: 6px;
+    margin-left: 18px;
+}
+
+.input-group input::placeholder {
+    color: transparent;
+    transition: color 0.2s;
+}
+
+.input-group.focused input::placeholder,
+.input-group.filled input::placeholder {
+    color: #d1d1d1;
+}
+
+.input-group input:invalid {
+    border-color: #d5d5d5;
+    box-shadow: none;
+}
+
+.input-group input:focus:invalid {
+    border-color: #8b0000;
+    box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.12);
+}
+
+.password-group input {
+    padding-right: 20px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #5f6f84;
+    padding: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 34px;
+    font-size: 15px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #252525;
+    font-weight: 500;
+}
+
+.remember-me input {
+    width: 16px;
+    height: 16px;
+    accent-color: #8b0000;
+    cursor: pointer;
+}
+
+.forgot-password {
+    color: #1f2937;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-button {
+    width: 100%;
+    min-height: 56px;
+    padding: 0 20px;
+    background-color: #8b0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.login-button:hover {
+    background-color: #6a0000;
+}
+
+.login-button:active {
+    transform: translateY(1px);
+}
+
+/* Success Toast */
+.login-success-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    font-size: 16px;
+}
+
+.toast-icon {
+    font-size: 24px;
+}
+
+.toast-message {
+    font-weight: 500;
+    margin-right: 15px;
+}
+
+.toast-close-btn {
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.toast-close-btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Success Modal */
+.login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.login-success-modal {
+    background-color: white;
+    padding: 40px;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    min-width: 450px;
+}
+
+.login-success-modal h3 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+.modal-btn-ok, .modal-btn-no {
+    padding: 10px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 110px;
+    transition: all 0.2s;
+}
+
+.modal-btn-ok {
+    background-color: #8b0000;
+    color: white;
+    border: 2px solid #8b0000;
+}
+
+.modal-btn-ok:hover {
+    background-color: #6a0000;
+}
+
+.modal-btn-no {
+    background-color: white;
+    color: #8b0000;
+    border: 1px solid #8b0000;
+}
+
+.modal-btn-no:hover {
+    background-color: #fff0f0;
+}
