@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { FiChevronDown } from 'react-icons/fi';
 import CustomDatePicker from './CustomDatePicker';
 import './UserRequest.css';
+import '../LoginPage/LoginPage.css'; // Reuse some layout logic if needed, or just icons
 
 const UserRequest = () => {
     const [searchType, setSearchType] = useState('dateRange');
@@ -10,19 +12,23 @@ const UserRequest = () => {
     const [isFocused, setIsFocused] = useState(false);
     
     const [formData, setFormData] = useState({
-        fromDate: '2026-04-18',
-        toDate: '2026-04-18',
+        fromDate: '2026-04-19',
+        toDate: '2026-04-19',
         userType: 'CBC',
-        status: 'ALL'
+        status: 'Approved'
     });
+
+    const [isUserTypeOpen, setIsUserTypeOpen] = useState(false);
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
 
     const handleDateChange = (name, date) => {
         setFormData(prev => ({ ...prev, [name]: date }));
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleSelectChange = (name, value) => {
         setFormData(prev => ({ ...prev, [name]: value }));
+        setIsUserTypeOpen(false);
+        setIsStatusOpen(false);
     };
 
     const handleBlur = () => {
@@ -96,23 +102,43 @@ const UserRequest = () => {
                             />
                         </div>
 
-                        <div className="form-field">
+                        <div className="form-field custom-dropdown-container">
                             <label>User Type</label>
-                            <select name="userType" value={formData.userType} onChange={handleChange}>
-                                <option value="CBC">CBC</option>
-                                <option value="ADMIN">ADMIN</option>
-                                <option value="USER">USER</option>
-                            </select>
+                            <div className="custom-dropdown-header" onClick={() => setIsUserTypeOpen(!isUserTypeOpen)}>
+                                <span className="selected-value red-text">{formData.userType}</span>
+                                <FiChevronDown className={`dropdown-arrow-icon ${isUserTypeOpen ? 'open' : ''}`} />
+                            </div>
+                            {isUserTypeOpen && (
+                                <div className="custom-dropdown-list">
+                                    <div 
+                                        className={`dropdown-item ${formData.userType === 'CBC' ? 'selected' : ''}`}
+                                        onClick={() => handleSelectChange('userType', 'CBC')}
+                                    >
+                                        CBC {formData.userType === 'CBC' && <span className="check-icon">✓</span>}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
-                        <div className="form-field">
+                        <div className="form-field custom-dropdown-container">
                             <label>Status</label>
-                            <select name="status" value={formData.status} onChange={handleChange}>
-                                <option value="ALL">ALL</option>
-                                <option value="PENDING">PENDING</option>
-                                <option value="APPROVED">APPROVED</option>
-                                <option value="REJECTED">REJECTED</option>
-                            </select>
+                            <div className="custom-dropdown-header" onClick={() => setIsStatusOpen(!isStatusOpen)}>
+                                <span className="selected-value">{formData.status}</span>
+                                <FiChevronDown className={`dropdown-arrow-icon ${isStatusOpen ? 'open' : ''}`} />
+                            </div>
+                            {isStatusOpen && (
+                                <div className="custom-dropdown-list">
+                                    {['ALL', 'Approved', 'Pending', 'Rejected'].map(opt => (
+                                        <div 
+                                            key={opt}
+                                            className={`dropdown-item ${formData.status === opt ? 'selected' : ''}`}
+                                            onClick={() => handleSelectChange('status', opt)}
+                                        >
+                                            {opt} {formData.status === opt && <span className="check-icon">✓</span>}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <button type="button" className="submit-btn">Submit</button>

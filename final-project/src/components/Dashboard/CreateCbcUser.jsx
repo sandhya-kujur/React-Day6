@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FiPaperclip, FiChevronDown } from 'react-icons/fi';
 import CustomDatePicker from './CustomDatePicker';
 import './CreateCbcUser.css';
@@ -38,6 +38,19 @@ const initialFormState = {
 
 const CreateCbcUser = () => {
   const [formData, setFormData] = useState(initialFormState);
+  const [showError, setShowError] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
+
+  const bankResolutionRef = useRef(null);
+  const kycRef = useRef(null);
+  const incorporationRef = useRef(null);
+  const firstPageRef = useRef(null);
+  const lastPageRef = useRef(null);
+  const proposalRef = useRef(null);
+
+  const handleUploadClick = (ref) => {
+    if (ref.current) ref.current.click();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,19 +65,50 @@ const CreateCbcUser = () => {
     setFormData(initialFormState);
   };
 
+  const validateForm = () => {
+    const requiredFields = [
+      'firstName', 'lastName', 'ceoName', 'companyName', 'email', 'pan', 
+      'mobileNumber', 'adminName', 'adminEmail', 'adminMobileNumber', 
+      'businessAddressLine', 'country', 'pinCode', 'state', 'district', 
+      'city', 'accountNumber', 'gstNumber', 'institutionType', 'stdCode', 
+      'telephoneNumber', 'affiliateFee', 'numberOfStaff', 'entityPanCard', 
+      'incorporationAddressLine1'
+    ];
+    return requiredFields.every(field => formData[field] && formData[field].toString().trim() !== '');
+  };
+
+  const handleCheckboxChange = (e) => {
+    const checked = e.target.checked;
+    setIsAgreed(checked);
+    if (checked && !validateForm()) {
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isAgreed) {
+      alert('Please agree to the terms and conditions');
+      return;
+    }
+    if (!validateForm()) {
+      setShowError(true);
+      return;
+    }
     console.log('Create CBC user', formData);
   };
 
   return (
     <div className="create-cbc-user-page">
-      <div className="page-breadcrumb">
-        <span>User Management</span>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-active">Create CBC User</span>
-      </div>
-
+      {showError && (
+        <div className="error-alert-bar">
+          <span className="error-close-icon" onClick={() => setShowError(false)}>✕</span>
+          <p>Please Enter all required fields!!!</p>
+          <button type="button" className="error-close-btn" onClick={() => setShowError(false)}>Close</button>
+        </div>
+      )}
       <div className="create-cbc-card">
         <form className="create-cbc-form" onSubmit={handleSubmit}>
           <div className="fields-grid">
@@ -395,14 +439,16 @@ const CreateCbcUser = () => {
           <div className="upload-grid">
             <div className="upload-item">
               <label>Bank Resolution <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={bankResolutionRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(bankResolutionRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload Bank Resolution (.pdf Only)</p>
               </div>
             </div>
             <div className="upload-item">
               <label>Authorized Signatory KYC <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={kycRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(kycRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload Authorized Signatory KYC (.pdf Only)</p>
               </div>
@@ -410,14 +456,16 @@ const CreateCbcUser = () => {
 
             <div className="upload-item">
               <label>Certificate of Incorporation <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={incorporationRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(incorporationRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload Certificate of Incorporation (.pdf Only)</p>
               </div>
             </div>
             <div className="upload-item">
               <label>First Page of Agreement <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={firstPageRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(firstPageRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload First Page of Agreement (.pdf Only)</p>
               </div>
@@ -425,14 +473,16 @@ const CreateCbcUser = () => {
 
             <div className="upload-item">
               <label>Last Page of Agreement <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={lastPageRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(lastPageRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload Last Page of Agreement (.pdf Only)</p>
               </div>
             </div>
             <div className="upload-item">
               <label>Business Proposal <span className="required">*</span></label>
-              <div className="upload-box">
+              <input type="file" ref={proposalRef} style={{ display: 'none' }} accept=".pdf" />
+              <div className="upload-box" onClick={() => handleUploadClick(proposalRef)}>
                 <FiPaperclip className="upload-icon" />
                 <p>Upload Business Proposal (.pdf Only)</p>
               </div>
@@ -441,7 +491,11 @@ const CreateCbcUser = () => {
 
           <div className="terms-row">
             <label className="terms-checkbox">
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                checked={isAgreed}
+                onChange={handleCheckboxChange}
+              />
               <span />
             </label>
             <p>

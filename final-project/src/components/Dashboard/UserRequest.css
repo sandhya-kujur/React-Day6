@@ -1,7 +1,8 @@
 .user-request-container {
-    padding: 20px;
+    padding: 0;
     width: 100%;
     animation: fadeIn 0.4s ease;
+    background-color: #ffffff;
 }
 
 @keyframes fadeIn {
@@ -12,7 +13,8 @@
 .search-card {
     background-color: #ffffff;
     border-radius: 12px;
-    padding: 30px;
+    padding: 30px 20px;
+    margin: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid #eeeeee;
 }
@@ -20,7 +22,8 @@
 .radio-group {
     display: flex;
     gap: 30px;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
+    padding-left: 5px;
 }
 
 .radio-label {
@@ -81,15 +84,19 @@
 
 .search-form {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-end;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 20px; /* Space down the boxes */
 }
 
 .form-field {
     position: relative;
-    flex: 1;
-    min-width: 200px;
+    width: 170px; /* Shrink to absolute fit */
+    flex: 0 0 auto;
 }
 
 .form-field label {
@@ -103,18 +110,93 @@
     z-index: 1;
 }
 
-.form-field input, 
-.form-field select {
+.form-field input {
     width: 100%;
     height: 45px;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 0 15px;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 600;
     color: #333;
     outline: none;
     transition: border-color 0.2s;
     background-color: #fff;
+    cursor: pointer;
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown-container {
+    position: relative;
+}
+
+.custom-dropdown-header {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.dropdown-arrow-icon {
+    color: #999;
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.dropdown-arrow-icon.open {
+    transform: rotate(180deg);
+}
+
+.custom-dropdown-list {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    z-index: 1000;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f9f9f9;
+}
+
+.dropdown-item.selected {
+    color: #8b0000;
+    font-weight: 600;
+    background-color: #eee;
+}
+
+.check-icon {
+    color: #8b0000;
+    font-size: 16px;
+}
+
+.red-text {
+    color: #333 !important;
 }
 
 .form-field input:focus, 
@@ -206,14 +288,13 @@
     background-color: #8b0000;
     color: #fff;
     border: none;
-    border-radius: 8px;
-    padding: 0 35px;
+    border-radius: 12px;
+    padding: 0 30px;
     height: 45px;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-left: 10px;
+    transition: all 0.2s;
 }
 
 .submit-btn:hover {
@@ -221,13 +302,14 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
     .search-form {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
+    }
+    .form-field {
+        min-width: calc(50% - 15px);
     }
     .submit-btn {
-        margin-left: 0;
         width: 100%;
     }
 }

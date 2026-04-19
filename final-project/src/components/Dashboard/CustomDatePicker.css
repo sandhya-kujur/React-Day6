@@ -1,7 +1,6 @@
 .custom-datepicker {
     position: relative;
     width: 100%;
-    min-width: 180px;
 }
 
 .datepicker-input-wrapper {
@@ -28,7 +27,7 @@
     padding: 0 15px;
     font-size: 16px;
     font-weight: 500;
-    color: #445588; /* Slightly blueish like the screenshot */
+    color: #333;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -43,6 +42,7 @@
 .calendar-svg-icon {
     width: 22px;
     height: 22px;
+    color: #999;
 }
 
 .calendar-dropdown {
