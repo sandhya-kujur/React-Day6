@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import nsdlWatermark from '../../assets/nsdl_watermark.png';
 import './DashboardHome.css';
+import { fetchDashboardData } from '../../actions/dashboardActions';
 
 const DashboardHome = () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const initDashboard = async () => {
+            console.log("Initializing dashboard data...");
+            const data = await fetchDashboardData();
+            if (data) {
+                console.log("Dashboard data received successfully:", data);
+            }
+            setIsLoading(false);
+        };
+        initDashboard();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div className="dashboard-home loading">
+                <div className="spinner"></div>
+                <p>Loading Dashboard...</p>
+            </div>
+        );
+    }
+
     return (
         <div className="dashboard-home">
             <img src={nsdlWatermark} alt="NSDL Watermark" className="watermark-bg-image" />

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
-import { handleLogin } from '../../actions/loginActions';
-import { IoEye, IoEyeOff } from "react-icons/io5";
-import { MdCheck } from 'react-icons/md';
+import { handleLogin, handleLogout } from '../../actions/loginActions';
+import { IoEye, IoEyeOff, IoCloseCircleOutline } from "react-icons/io5";
+import { MdCheck, MdClose } from 'react-icons/md';
 // Assets are commented as placeholders. Place your actual images in the src/assets folder
 import nsdlLogo from '../../assets/bank.png';
 import leftImage from '../../assets/nsdl_watermark.png';
@@ -24,7 +24,10 @@ const LoginPage = () => {
 
     // State for modals/toast
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
     const [showToast, setShowToast] = useState(false);
+    const [toastType, setToastType] = useState('success'); // 'success' or 'error'
+    const [apiErrorMessage, setApiErrorMessage] = useState('');
     const navigate = useNavigate();
 
     // State for toggling password visibility
@@ -85,9 +88,19 @@ const LoginPage = () => {
             const response = await handleLogin(formData);
             setIsLoading(false);
             if (response.success) {
+                sessionStorage.setItem('username', formData.username);
+                // Extract and store the dynamic access token from decrypted data
+                if (response.data && response.data.access_token) {
+                    sessionStorage.setItem('access_token', response.data.access_token);
+                }
+                setToastType('success');
                 setShowSuccessModal(true);
                 setShowToast(true);
             } else {
+                setApiErrorMessage(response.error || 'Invalid username or password.');
+                setToastType('error');
+                setShowErrorModal(true);
+                setShowToast(true);
                 setErrors(prev => ({
                     ...prev,
                     general: response.error || 'Invalid username or password.'
@@ -192,9 +205,9 @@ const LoginPage = () => {
 
             {/* Success Toast */}
             {showToast && (
-                <div className="login-success-toast">
-                    <MdCheck className="toast-icon" />
-                    <span className="toast-message">Login Successful!!</span>
+                <div className={`login-toast ${toastType}-toast`}>
+                    {toastType === 'success' ? <MdCheck className="toast-icon" /> : <MdClose className="toast-icon" />}
+                    <span className="toast-message">{toastType === 'success' ? 'Login Successful!!' : apiErrorMessage}</span>
                     <button type="button" className="toast-close-btn" onClick={() => setShowToast(false)}>Close</button>
                 </div>
             )}
@@ -206,8 +219,28 @@ const LoginPage = () => {
                         <h3>Congratulations!!! Login Successfull</h3>
                         <div className="modal-actions">
                             <button type="button" className="modal-btn-ok" onClick={() => navigate('/dashboard')}>OK</button>
-                            <button type="button" className="modal-btn-no" onClick={() => { setShowSuccessModal(false); setShowToast(false); }}>NO</button>
+                            <button type="button" className="modal-btn-no" onClick={async () => { 
+                                await handleLogout();
+                                setShowSuccessModal(false); 
+                                setShowToast(false); 
+                            }}>NO</button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {showErrorModal && (
+                <div className="login-modal-overlay">
+                    <div className="login-error-modal">
+                        <button className="modal-close-x" onClick={() => setShowErrorModal(false)}>
+                            <MdClose />
+                        </button>
+                        <div className="error-icon-wrapper">
+                            <IoCloseCircleOutline className="error-circle-icon" />
+                            <span className="error-status-text">FAILED</span>
+                        </div>
+                        <p className="error-detail-text">{apiErrorMessage}</p>
+                        <button type="button" className="modal-btn-okay" onClick={() => { setShowErrorModal(false); setShowToast(false); }}>Okay</button>
                     </div>
                 </div>
             )}

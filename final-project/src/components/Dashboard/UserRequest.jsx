@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
+import { MdClose, MdCheck } from 'react-icons/md';
 import CustomDatePicker from './CustomDatePicker';
+import { fetchUserList } from '../../actions/dashboardActions';
 import './UserRequest.css';
 import '../LoginPage/LoginPage.css'; // Reuse some layout logic if needed, or just icons
 
@@ -10,12 +12,19 @@ const UserRequest = () => {
     const [usernameError, setUsernameError] = useState('');
     const [isTouched, setIsTouched] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState('error');
     
+    // Read userType from sessionStorage to determine maker role
+    const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+    const sessionUserType = userData?.userType || userData?.userInfo?.userType || '';
+    const isMaker = sessionUserType.toLowerCase().endsWith('_maker');
     const [formData, setFormData] = useState({
         fromDate: '2026-04-19',
         toDate: '2026-04-19',
-        userType: 'CBC',
-        status: 'Approved'
+        userType: isMaker ? 'CBC' : 'ALL',
+        status: 'ALL'
     });
 
     const [isUserTypeOpen, setIsUserTypeOpen] = useState(false);
@@ -53,6 +62,44 @@ const UserRequest = () => {
             } else {
                 setUsernameError('');
             }
+        }
+    };
+    const handleSubmit = async () => {
+        const loggedInUser = sessionStorage.getItem('username') || 'Guest';
+        let payload = {};
+
+        if (searchType === 'dateRange') {
+            payload = {
+                status: formData.status.toUpperCase(),
+                username: loggedInUser,
+                startDate: formData.fromDate,
+                endDate: formData.toDate,
+                role: formData.userType
+            };
+        } else {
+            // Search by User Name
+            if (!username.trim()) {
+                setUsernameError('Username is required');
+                return;
+            }
+            payload = {
+                username: username,
+                role: username.startsWith("CBCM") ? "CBC Maker" : username.startsWith("CBC") ? "CBC" : "Retailer"
+            };
+        }
+
+        console.log(`Sending encrypted ${searchType} report request:`, payload);
+        const result = await fetchUserList(payload);
+        
+        if (result && (result.status === 200 || result.status === "SUCCESS")) {
+            console.log('Report result received:', result);
+            // Handle display of results (table) here
+            setShowToast(false);
+        } else {
+            const errorMsg = result?.msg || result?.message || "Failed to fetch user list";
+            setToastMessage(errorMsg);
+            setToastType('error');
+            setShowToast(true);
         }
     };
 
@@ -110,12 +157,15 @@ const UserRequest = () => {
                             </div>
                             {isUserTypeOpen && (
                                 <div className="custom-dropdown-list">
-                                    <div 
-                                        className={`dropdown-item ${formData.userType === 'CBC' ? 'selected' : ''}`}
-                                        onClick={() => handleSelectChange('userType', 'CBC')}
-                                    >
-                                        CBC {formData.userType === 'CBC' && <span className="check-icon">✓</span>}
-                                    </div>
+                                    {(isMaker ? ['CBC'] : ['CBC', 'CBC Maker', 'Master Distributor', 'Distributor', 'Retailer', 'ALL']).map(opt => (
+                                        <div 
+                                            key={opt}
+                                            className={`dropdown-item ${formData.userType === opt ? 'selected' : ''}`}
+                                            onClick={() => handleSelectChange('userType', opt)}
+                                        >
+                                            {opt} {formData.userType === opt && <span className="check-icon">✓</span>}
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
@@ -141,7 +191,7 @@ const UserRequest = () => {
                             )}
                         </div>
 
-                        <button type="button" className="submit-btn">Submit</button>
+                        <button type="button" className="submit-btn" onClick={handleSubmit}>Submit</button>
                     </div>
                 ) : (
                     <div className="search-form-username">
@@ -158,10 +208,19 @@ const UserRequest = () => {
                             <label htmlFor="username">Username*</label>
                             {usernameError && <span className="error-message">{usernameError}</span>}
                         </div>
-                        <button type="button" className="submit-btn">Submit</button>
+                        <button type="button" className="submit-btn" onClick={handleSubmit}>Submit</button>
                     </div>
                 )}
             </div>
+
+            {/* Error Toast */}
+            {showToast && (
+                <div className={`wallet-toast ${toastType}-toast`}>
+                    {toastType === 'success' ? <MdCheck className="toast-icon" /> : <MdClose className="toast-icon" />}
+                    <span className="toast-message">{toastMessage}</span>
+                    <button type="button" className="toast-close-btn" onClick={() => setShowToast(false)}>Close</button>
+                </div>
+            )}
         </div>
     );
 };

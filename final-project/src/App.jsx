@@ -6,6 +6,7 @@ import DashboardHome from './components/Dashboard/DashboardHome';
 import CreateCbcUser from './components/Dashboard/CreateCbcUser';
 import UserRequest from './components/Dashboard/UserRequest';
 import WalletAdjustment from './components/Dashboard/WalletAdjustment';
+import AuditTrailPage from './components/Dashboard/AuditTrailPage';
 import './App.css';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
               <Route path="create" element={<CreateCbcUser />} />
               <Route path="requests" element={<UserRequest />} />
             </Route>
-            <Route path="audit" element={<div style={{padding: '20px'}}>Audit Trail Page Placeholder</div>} />
+            <Route path="audit" element={<AuditTrailPage />} />
             <Route path="wallet" element={<WalletAdjustment />} />
           </Route>
         </Routes>

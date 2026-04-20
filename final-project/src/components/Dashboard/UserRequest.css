@@ -13,7 +13,7 @@
 .search-card {
     background-color: #ffffff;
     border-radius: 12px;
-    padding: 30px 20px;
+    padding: 35px 25px;
     margin: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid #eeeeee;
@@ -21,8 +21,8 @@
 
 .radio-group {
     display: flex;
-    gap: 30px;
-    margin-bottom: 25px;
+    gap: 40px;
+    margin-bottom: 30px;
     padding-left: 5px;
 }
 
@@ -61,6 +61,7 @@
 
 .radio-label input:checked ~ .custom-radio {
     border-color: #8b0000;
+    box-shadow: 0 0 0 10px rgba(139, 0, 0, 0.1);
 }
 
 .custom-radio:after {
@@ -226,7 +227,7 @@
 /* Floating Label Specifics */
 .floating-label-field {
     position: relative;
-    margin-top: 10px;
+    /* margin-top: 10px; Removed to fix vertical alignment */
 }
 
 .floating-label-field label {
@@ -261,13 +262,20 @@
 
 .search-form-username {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: center;
+    gap: 40px;
     padding-bottom: 20px;
+    width: 100%;
 }
 
 .search-form-username .form-field {
-    max-width: 400px;
+    flex: 0 1 500px;
+    max-width: 100%;
+}
+
+.search-form-username .submit-btn {
+    border-radius: 12px;
+    min-width: 120px;
 }
 
 .input-with-icon {
@@ -289,10 +297,10 @@
     color: #fff;
     border: none;
     border-radius: 12px;
-    padding: 0 30px;
+    padding: 0 35px;
     height: 45px;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -312,4 +320,62 @@
     .submit-btn {
         width: 100%;
     }
+}
+/* Toast Notification Styles */
+.wallet-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2000;
+    min-width: 380px;
+    color: white;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.success-toast {
+    background-color: #4caf50;
+}
+
+.error-toast {
+    background-color: #db4437;
+}
+
+.toast-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.toast-close-btn {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.toast-close-btn:hover {
+    background-color: #ffffff;
+    transform: translateY(-1px);
 }
