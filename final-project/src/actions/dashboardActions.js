@@ -146,18 +146,22 @@ export const fetchUserList = async (searchParams) => {
         });
 
         const result = await response.json();
-        if (result && result.ResponseData) {
-            try {
-                const decryptedString = decryptResponseData(result.ResponseData);
-                return JSON.parse(decryptedString);
-            } catch (e) {
-                console.error("Failed to decrypt user list response:", e);
+        if (result && (result.status === "Success" || result.status === "SUCCESS" || response.status === 200)) {
+            let finalData = result;
+            if (result.ResponseData) {
+                try {
+                    const decryptedString = decryptResponseData(result.ResponseData);
+                    finalData = JSON.parse(decryptedString);
+                } catch (e) {
+                    console.error("Failed to decrypt user list response:", e);
+                }
             }
+            return { success: true, data: finalData };
         }
-        return result;
+        return { success: false, msg: result.statusDesc || result.message || "Failed to fetch user list" };
     } catch (error) {
         console.error("Fetch user list API failed:", error);
-        return null;
+        return { success: false, msg: error.message };
     }
 };
 export const submitWalletAdjustment = async (payload) => {
@@ -271,5 +275,36 @@ export const fetchAddressByPincode = async (pincode) => {
     } catch (error) {
         console.error("Fetch address by pincode failed:", error);
         return { ok: false, error: "Network error: Unable to fetch address details" };
+    }
+};
+export const cbcOnboard = async (payload) => {
+    const URL = 'https://apidev.iserveu.online/NSDL/user-onboarding/cbc-onboard';
+    const TOKEN = sessionStorage.getItem('access_token');
+    const PASS_KEY = 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA';
+
+    try {
+        const encryptedBody = encryptData(payload);
+        const response = await fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `${TOKEN}`,
+                'pass_key': PASS_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ RequestData: encryptedBody })
+        });
+        
+        const result = await response.json();
+        if (result && result.ResponseData) {
+            const decryptedResponse = decryptData(result.ResponseData);
+            return { ok: true, data: decryptedResponse };
+        } else if (result && result.status === "Success") {
+             return { ok: true, data: result };
+        }
+        
+        return { ok: false, error: result.statusDesc || result.message || 'Onboarding failed' };
+    } catch (error) {
+        console.error("CBC Onboarding failed:", error);
+        return { ok: false, error: "Network error: Unable to complete onboarding" };
     }
 };

@@ -1,107 +1,39 @@
-import React, { useMemo, useState } from 'react';
-import { MdDownload, MdSearch } from 'react-icons/md';
+import React, { useState, useMemo } from 'react';
+import { FiSearch, FiDownload, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { MdCalendarToday } from 'react-icons/md';
+import { FaUserCircle } from 'react-icons/fa';
+import { TiArrowUnsorted } from 'react-icons/ti';
 import CustomDatePicker from './CustomDatePicker';
+import './AuditTrailPage.css';
 
-const PAGE_SIZE = 10;
-const TOTAL = 50;
+const TOTAL_RECORDS = 50;
 
 const MOCK_ROWS = [
     {
-        sno: 1, fieldName: 'kitchen', userName: 'Maker', userId: 'rYd306', adminName: 'Jonathan Velasque', adminId: 'sarah.chen@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Update', operationRequestedBy: 'Admin',
-        city: 'Mumbai', device: 'Desktop', canada: 'No', latitude: '19.0760', longitude: '72.8777', continent: 'Asia',
-        ipAddress: '192.168.1.1', fullAddress: '123 Street, Mumbai, India', sessionId: 'SES-001', vehicle: 'N/A', bencode: 'B1', userType: 'CBC Maker'
+        id: 1, fieldName: 'Maker', userName: 'Krishna', userId: 'CBC', adminName: 'Carson Darrin', adminId: 'Das',
+        createdDate: '19/06/2024', updatedDate: '19/06/2024', operationPerformed: '809829919'
     },
     {
-        sno: 2, fieldName: 'financial', userName: 'Checker', userId: 'Vap282', adminName: 'Michael Nelson', adminId: 'm.nelson@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Status Change', operationRequestedBy: 'System',
-        city: 'Delhi', device: 'Mobile', canada: 'No', latitude: '28.6139', longitude: '77.2090', continent: 'Asia',
-        ipAddress: '192.168.1.2', fullAddress: '456 Avenue, Delhi, India', sessionId: 'SES-002', vehicle: 'N/A', bencode: 'B2', userType: 'CBC Checker'
+        id: 2, fieldName: 'Maker', userName: 'Krishna', userId: 'CBC', adminName: 'Ashy Handgun', adminId: 'Das',
+        createdDate: '19/06/2024', updatedDate: '19/06/2024', operationPerformed: '809829919'
     },
     {
-        sno: 3, fieldName: 'until', userName: 'Maker', userId: 'AXE124', adminName: 'Christopher Ramirez', adminId: 'c.ramirez@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Access Grant', operationRequestedBy: 'Admin',
-        city: 'Bangalore', device: 'Tablet', canada: 'No', latitude: '12.9716', longitude: '77.5946', continent: 'Asia',
-        ipAddress: '192.168.1.3', fullAddress: '789 Road, Bangalore, India', sessionId: 'SES-003', vehicle: 'N/A', bencode: 'B3', userType: 'CBC Maker'
-    },
-    {
-        sno: 4, fieldName: 'worry', userName: 'Maker', userId: 'sYF129', adminName: 'Sara Reed', adminId: 's.reed@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Risk Assessment', operationRequestedBy: 'Security',
-        city: 'Chennai', device: 'Desktop', canada: 'No', latitude: '13.0827', longitude: '80.2707', continent: 'Asia',
-        ipAddress: '192.168.1.4', fullAddress: '101 Lane, Chennai, India', sessionId: 'SES-004', vehicle: 'N/A', bencode: 'B4', userType: 'Retailer'
-    },
-    {
-        sno: 5, fieldName: 'happen', userName: 'Checker', userId: 'kdX624', adminName: 'Joseph Oconnor', adminId: 'j.oconnor@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Validation', operationRequestedBy: 'System',
-        city: 'Hyderabad', device: 'Mobile', canada: 'No', latitude: '17.3850', longitude: '78.4867', continent: 'Asia',
-        ipAddress: '192.168.1.5', fullAddress: '202 Blvd, Hyderabad, India', sessionId: 'SES-005', vehicle: 'N/A', bencode: 'B5', userType: 'Distributor'
-    },
-    {
-        sno: 6, fieldName: 'raise', userName: 'Checker', userId: 'kHy216', adminName: 'Robert Dunn', adminId: 'r.dunn@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Limit Check', operationRequestedBy: 'System',
-        city: 'Pune', device: 'Desktop', canada: 'No', latitude: '18.5204', longitude: '73.8567', continent: 'Asia',
-        ipAddress: '192.168.1.6', fullAddress: '303 Street, Pune, India', sessionId: 'SES-006', vehicle: 'N/A', bencode: 'B6', userType: 'CBC Checker'
-    },
-    {
-        sno: 7, fieldName: 'administration', userName: 'Maker', userId: 'nlL226', adminName: 'Michael Mann', adminId: 'm.mann@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Flagging', operationRequestedBy: 'Risk Dept',
-        city: 'Kolkata', device: 'Desktop', canada: 'No', latitude: '22.5726', longitude: '88.3639', continent: 'Asia',
-        ipAddress: '192.168.1.7', fullAddress: '404 Circle, Kolkata, India', sessionId: 'SES-007', vehicle: 'N/A', bencode: 'B7', userType: 'CBC Maker'
-    },
-    {
-        sno: 8, fieldName: 'be', userName: 'Checker', userId: 'Ywf820', adminName: 'Angela Allen', adminId: 'a.allen@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Payout', operationRequestedBy: 'Admin',
-        city: 'Ahmedabad', device: 'Mobile', canada: 'No', latitude: '23.0225', longitude: '72.5714', continent: 'Asia',
-        ipAddress: '192.168.1.8', fullAddress: '505 Way, Ahmedabad, India', sessionId: 'SES-008', vehicle: 'N/A', bencode: 'B8', userType: 'Retailer'
-    },
-    {
-        sno: 9, fieldName: 'wind', userName: 'Checker', userId: 'WQm445', adminName: 'Steven Blanchard', adminId: 's.blanchard@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Edit', operationRequestedBy: 'User',
-        city: 'Surat', device: 'Desktop', canada: 'No', latitude: '21.1702', longitude: '72.8311', continent: 'Asia',
-        ipAddress: '192.168.1.9', fullAddress: '606 Square, Surat, India', sessionId: 'SES-009', vehicle: 'N/A', bencode: 'B9', userType: 'CBC Maker'
-    },
-    {
-        sno: 10, fieldName: 'computer', userName: 'Checker', userId: 'rJa259', adminName: 'Jason Schmitt', adminId: 'j.schmitt@bank.com',
-        createdDate: '2026-04-20', updatedDate: '2026-04-20', operationPerformed: 'Verify', operationRequestedBy: 'System',
-        city: 'Jaipur', device: 'Tablet', canada: 'No', latitude: '26.9124', longitude: '75.7873', continent: 'Asia',
-        ipAddress: '192.168.1.10', fullAddress: '707 Path, Jaipur, India', sessionId: 'SES-010', vehicle: 'N/A', bencode: 'B10', userType: 'CBC Checker'
-    },
+        id: 3, fieldName: 'Maker', userName: 'Krishna', userId: 'CBC', adminName: 'Ashy Handgun', adminId: 'Das',
+        createdDate: '19/06/2024', updatedDate: '19/06/2024', operationPerformed: '809829919'
+    }
 ];
 
 const AuditTrailPage = () => {
-    const today = useMemo(() => {
-        const d = new Date();
-        return d.toISOString().slice(0, 10);
-    }, []);
-
-    const [fromDate, setFromDate] = useState(today);
-    const [toDate, setToDate] = useState(today);
-    const [username, setUsername] = useState('');
-    const [search, setSearch] = useState('');
-    const [page, setPage] = useState(1);
-
-    const filteredRows = useMemo(() => {
-        if (!search.trim()) return MOCK_ROWS;
-        const q = search.toLowerCase();
-        return MOCK_ROWS.filter(
-            (r) =>
-                Object.values(r).some((v) =>
-                    String(v).toLowerCase().includes(q)
-                )
-        );
-    }, [search]);
-
-    const totalPages = Math.max(1, Math.ceil(TOTAL / PAGE_SIZE));
-    const start = (page - 1) * PAGE_SIZE + 1;
-    const end = Math.min(page * PAGE_SIZE, TOTAL);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setPage(1);
-    };
+    const [searchQuery, setSearchQuery] = useState('');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
+    const [currentPage, setCurrentPage] = useState(6);
+    const [rowsPerPage, setRowsPerPage] = useState(3);
+    const [goToPage, setGoToPage] = useState('9');
+    const [selectedRows, setSelectedRows] = useState(new Set([3])); // Default select row ID 3 as per screenshot
+    const totalPages = 50;
 
     const columns = [
-        { label: 'Sno', key: 'sno' },
         { label: 'Field Name', key: 'fieldName' },
         { label: 'User Name', key: 'userName' },
         { label: 'User ID', key: 'userId' },
@@ -109,357 +41,249 @@ const AuditTrailPage = () => {
         { label: 'Admin ID', key: 'adminId' },
         { label: 'Created Date', key: 'createdDate' },
         { label: 'Updated Date', key: 'updatedDate' },
-        { label: 'Operation Performed', key: 'operationPerformed' },
-        { label: 'Operation Requested By', key: 'operationRequestedBy' },
-        { label: 'City', key: 'city' },
-        { label: 'Device', key: 'device' },
-        { label: 'Canada', key: 'canada' },
-        { label: 'Latitude', key: 'latitude' },
-        { label: 'Longitude', key: 'longitude' },
-        { label: 'Continent', key: 'continent' },
-        { label: 'IP Address', key: 'ipAddress' },
-        { label: 'Full Address', key: 'fullAddress' },
-        { label: 'Session ID', key: 'sessionId' },
-        { label: 'Vehicle', key: 'vehicle' },
-        { label: 'Bencode', key: 'bencode' },
-        { label: 'UserType', key: 'userType' }
+        { label: 'Operation Performed', key: 'operationPerformed' }
     ];
 
-    return (
-        <div style={pageWrap}>
-            <style>
-                {`
-                .table-scroll-container::-webkit-scrollbar {
-                    height: 8px;
-                }
-                .table-scroll-container::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                    border-radius: 4px;
-                }
-                .table-scroll-container::-webkit-scrollbar-thumb {
-                    background: ${maroon};
-                    border-radius: 4px;
-                }
-                .table-scroll-container::-webkit-scrollbar-thumb:hover {
-                    background: #6b0000;
-                }
-                `}
-            </style>
-            <div style={card}>
-                <form style={filterRow} onSubmit={handleSubmit}>
-                    <div style={field}>
-                        <CustomDatePicker
-                            label="From Date"
-                            selectedDate={fromDate}
-                            onChange={setFromDate}
-                        />
-                    </div>
-                    <div style={field}>
-                        <CustomDatePicker
-                            label="To Date"
-                            selectedDate={toDate}
-                            onChange={setToDate}
-                        />
-                    </div>
-                    <label style={{ ...field, flex: '1 1 240px' }}>
-                        <span style={label}>Username</span>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            style={input}
-                            placeholder=""
-                        />
-                    </label>
-                    <button type="submit" style={submitBtn}>
-                        Submit
-                    </button>
-                </form>
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
 
-                <div style={toolbar}>
-                    <div style={searchWrap}>
-                        <MdSearch size={18} style={searchIcon} aria-hidden />
-                        <input
-                            type="search"
-                            placeholder="Search Here"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            style={searchInput}
+    const handleGoToPage = (e) => {
+        if (e.key === 'Enter') {
+            const page = parseInt(goToPage);
+            if (!isNaN(page)) {
+                handlePageChange(page);
+            }
+        }
+    };
+
+    const handleSelectRow = (id) => {
+        const newSelected = new Set(selectedRows);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedRows(newSelected);
+    };
+
+    const handleSelectAllRows = (e) => {
+        if (e.target.checked) {
+            const allIds = MOCK_ROWS.map(row => row.id);
+            setSelectedRows(new Set(allIds));
+        } else {
+            setSelectedRows(new Set());
+        }
+    };
+
+    const handleDownload = () => {
+        // Create dummy CSV content
+        const headers = columns.map(col => col.label).join(',');
+        const rows = MOCK_ROWS.map(row => 
+            columns.map(col => row[col.key]).join(',')
+        ).join('\n');
+        const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + rows;
+        
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "audit_trail_sample.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const renderPageNumbers = () => {
+        const pages = [];
+        
+        // Always show page 1
+        pages.push(
+            <button 
+                key={1} 
+                className={`page-number ${currentPage === 1 ? 'active' : ''}`}
+                onClick={() => handlePageChange(1)}
+            >
+                1
+            </button>
+        );
+
+        if (currentPage > 4) {
+            pages.push(<span key="dots1" className="page-dots">...</span>);
+        }
+
+        // Show range around current page
+        for (let i = Math.max(2, currentPage - 2); i <= Math.min(totalPages - 1, currentPage + 2); i++) {
+            pages.push(
+                <button 
+                    key={i} 
+                    className={`page-number ${currentPage === i ? 'active' : ''}`}
+                    onClick={() => handlePageChange(i)}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        if (currentPage < totalPages - 3) {
+            pages.push(<span key="dots2" className="page-dots">...</span>);
+        }
+
+        // Always show last page
+        if (totalPages > 1) {
+            pages.push(
+                <button 
+                    key={totalPages} 
+                    className={`page-number ${currentPage === totalPages ? 'active' : ''}`}
+                    onClick={() => handlePageChange(totalPages)}
+                >
+                    {totalPages}
+                </button>
+            );
+        }
+
+        return pages;
+    };
+
+    return (
+        <div className="audit-trail-page">
+            <div className="breadcrumb">
+                <span>Bank User Management</span> / <span className="active-breadcrumb">Audit Trail</span>
+            </div>
+
+            <h1 className="page-title">Audit Trail</h1>
+
+            <div className="audit-card">
+                <div className="audit-toolbar">
+                    <div className="username-search-large">
+                        <FiSearch className="large-search-icon" />
+                        <input 
+                            type="text" 
+                            placeholder="Search by User Name" 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <button type="button" style={downloadBtn}>
-                        <MdDownload size={18} />
-                        Download Sample File
+
+                    <div className="unified-date-picker">
+                        <div className="date-pick-item">
+                            <CustomDatePicker 
+                                selectedDate={fromDate}
+                                onChange={setFromDate}
+                                placeholder="Start date"
+                            />
+                        </div>
+                        <span className="date-arrow">→</span>
+                        <div className="date-pick-item">
+                            <CustomDatePicker 
+                                selectedDate={toDate}
+                                onChange={setToDate}
+                                placeholder="End date"
+                            />
+                        </div>
+                        <MdCalendarToday className="unified-calendar-icon" />
+                    </div>
+
+                    <button className="download-sample-btn" onClick={handleDownload}>
+                        <FiDownload /> Download Sample File
                     </button>
                 </div>
 
-                <div style={tableScroll} className="table-scroll-container">
-                    <table style={table}>
+                <div className="table-container">
+                    <table className="audit-table">
                         <thead>
-                            <tr style={{ borderBottom: '1px solid #eee' }}>
-                                {columns.map((col, i) => (
-                                    <React.Fragment key={col.label}>
-                                        <th style={th}>{col.label}</th>
-                                        {i < columns.length - 1 && (
-                                            <th style={separator}>|</th>
-                                        )}
-                                    </React.Fragment>
+                            <tr>
+                                <th>
+                                    <input 
+                                        type="checkbox" 
+                                        className="checkbox-custom" 
+                                        onChange={handleSelectAllRows}
+                                        checked={selectedRows.size === MOCK_ROWS.length}
+                                    />
+                                </th>
+                                {columns.map((col) => (
+                                    <th key={col.key}>
+                                        {col.label} <TiArrowUnsorted />
+                                    </th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredRows.map((row) => (
-                                <tr key={row.sno} style={rowBase}>
-                                    {columns.map((col, i) => (
-                                        <React.Fragment key={col.key}>
-                                            <td style={td}>{row[col.key]}</td>
-                                            {i < columns.length - 1 && (
-                                                <td style={td}></td>
-                                            )}
-                                        </React.Fragment>
-                                    ))}
+                            {MOCK_ROWS.map((row) => (
+                                <tr key={row.id}>
+                                    <td>
+                                        <input 
+                                            type="checkbox" 
+                                            className="checkbox-custom" 
+                                            checked={selectedRows.has(row.id)} 
+                                            onChange={() => handleSelectRow(row.id)} 
+                                        />
+                                    </td>
+                                    <td>{row.fieldName}</td>
+                                    <td>{row.userName}</td>
+                                    <td>{row.userId}</td>
+                                    <td>
+                                        <div className="user-cell">
+                                            <FaUserCircle className="admin-avatar" />
+                                            {row.adminName}
+                                        </div>
+                                    </td>
+                                    <td>{row.adminId}</td>
+                                    <td>{row.createdDate}</td>
+                                    <td>{row.updatedDate}</td>
+                                    <td>{row.operationPerformed}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
 
-                <div style={paginationWrap}>
-                    <div style={pagination}>
-                        <span style={pageSummary}>
-                            {start} to {end} of {TOTAL}
-                        </span>
-                        <div style={pageControls}>
-                            <button
-                                type="button"
-                                style={pageBtn}
-                                disabled={page <= 1}
-                                onClick={() => setPage(1)}
-                            >
-                                ««
-                            </button>
-                            <button
-                                type="button"
-                                style={pageBtn}
-                                disabled={page <= 1}
-                                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                            >
-                                ‹
-                            </button>
-                            <span style={pageInfo}>
-                                Page {page} of {totalPages}
-                            </span>
-                            <button
-                                type="button"
-                                style={pageBtn}
-                                disabled={page >= totalPages}
-                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                            >
-                                ›
-                            </button>
-                            <button
-                                type="button"
-                                style={pageBtn}
-                                disabled={page >= totalPages}
-                                onClick={() => setPage(totalPages)}
-                            >
-                                »»
-                            </button>
+                <div className="pagination-footer">
+                    <div className="pagination-left">
+                        <div className="rows-selector">
+                            Row per page 
+                            <select value={rowsPerPage} onChange={(e) => setRowsPerPage(Number(e.target.value))}>
+                                <option value="3">3</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
                         </div>
+                        
+                        <div className="go-to-page">
+                            Go to 
+                            <input 
+                                type="text" 
+                                value={goToPage} 
+                                onChange={(e) => setGoToPage(e.target.value)}
+                                onKeyDown={handleGoToPage}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="pagination-controls">
+                        <button 
+                            className="page-arrow" 
+                            disabled={currentPage === 1}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                            <FiChevronLeft />
+                        </button>
+                        
+                        {renderPageNumbers()}
+                        
+                        <button 
+                            className="page-arrow" 
+                            disabled={currentPage === totalPages}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                            <FiChevronRight />
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-
-const maroon = '#8B0000';
-
-const pageWrap = {
-    padding: '20px 24px 32px',
-    minHeight: '100%',
-};
-
-const card = {
-    background: '#ffffff',
-    borderRadius: '10px',
-    boxShadow: 'none',
-    padding: '20px',
-    maxWidth: '1400px',
-    margin: '0 auto',
-};
-
-const filterRow = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
-    alignItems: 'flex-end',
-    marginBottom: '20px',
-};
-
-const field = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    flex: '0 1 160px',
-};
-
-const label = {
-    fontSize: '0.8rem',
-    fontWeight: 600,
-    color: '#4a5568',
-};
-
-const input = {
-    height: '40px',
-    padding: '8px 10px',
-    border: '1px solid #cbd5e0',
-    borderRadius: '10px',
-    fontSize: '0.95rem',
-    fontFamily: 'inherit',
-    boxSizing: 'border-box',
-};
-
-const submitBtn = {
-    background: maroon,
-    color: '#fff',
-    border: 'none',
-    borderRadius: '10px',
-    padding: '0 32px',
-    height: '40px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    fontSize: '0.95rem',
-    alignSelf: 'flex-end',
-    boxSizing: 'border-box',
-};
-
-const toolbar = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '12px',
-    marginBottom: '16px',
-};
-
-const searchWrap = {
-    position: 'relative',
-    flex: '1 1 220px',
-    maxWidth: '320px',
-};
-
-const searchIcon = {
-    position: 'absolute',
-    left: 10,
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#a0aec0',
-    pointerEvents: 'none',
-};
-
-const searchInput = {
-    width: '100%',
-    padding: '8px 12px 8px 36px',
-    border: '1px solid #cbd5e0',
-    borderRadius: '10px',
-    fontSize: '0.95rem',
-    boxSizing: 'border-box',
-};
-
-const downloadBtn = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    background: '#4a5568',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '10px',
-    padding: '10px 16px',
-    fontSize: '0.9rem',
-    fontWeight: 600,
-    cursor: 'pointer',
-};
-
-const tableScroll = {
-    overflowX: 'auto',
-    marginBottom: '16px',
-};
-
-const table = {
-    width: '100%',
-    borderCollapse: 'collapse',
-    fontSize: '0.9rem',
-};
-
-const th = {
-    color: '#000',
-    fontWeight: 'bold',
-    padding: '15px 10px',
-    textAlign: 'center',
-    whiteSpace: 'nowrap',
-    border: 'none',
-    fontSize: '0.95rem',
-};
-
-const separator = {
-    padding: '0 5px',
-    color: '#ccc',
-    fontWeight: '400',
-    fontSize: '1.1rem',
-};
-
-const rowBase = {
-    borderBottom: '1px solid #eee',
-};
-
-const td = {
-    padding: '12px 10px',
-    textAlign: 'center',
-    color: '#2d3748',
-    verticalAlign: 'middle',
-};
-
-const paginationWrap = {
-    marginTop: '20px',
-};
-
-const pagination = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '12px',
-    paddingTop: '8px',
-    borderTop: '1px solid #edf2f7',
-    fontSize: '0.9rem',
-    color: '#4a5568',
-};
-
-const pageSummary = {
-    fontWeight: 500,
-};
-
-const pageControls = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-};
-
-const pageBtn = {
-    minWidth: '32px',
-    height: '32px',
-    padding: '0 8px',
-    border: '1px solid #cbd5e0',
-    background: '#fff',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    fontSize: '0.85rem',
-};
-
-const pageInfo = {
-    padding: '0 8px',
-    fontWeight: 500,
 };
 
 export default AuditTrailPage;

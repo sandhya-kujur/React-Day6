@@ -45,6 +45,51 @@ export const decryptResponseData = (responseBody) => {
     return decryptedString;
 };
 
+export const sendForgotPasswordOtp = async (username) => {
+    const URL = `https://services.iserveu.online/dev/nsdlab-internal/user-mgmt/utility/send-forgot-password-otp?userName=${username}`;
+    try {
+        const response = await fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+        return {
+            ok: response.ok,
+            status: response.status,
+            data: result
+        };
+    } catch (error) {
+        console.error("Forgot Password OTP API failed:", error);
+        return { ok: false, error: error.message };
+    }
+};
+
+export const verifyOtpAndSendTempPassword = async (payload) => {
+    const URL = `https://services.iserveu.online/dev/nsdlab-internal/user-mgmt/utility/verify-otp-send-temporary-password`;
+    try {
+        const response = await fetch(URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        return {
+            ok: response.ok,
+            status: response.status,
+            data: result
+        };
+    } catch (error) {
+        console.error("OTP Verification API failed:", error);
+        return { ok: false, error: error.message };
+    }
+};
+
 export const handleLogin = async (credentials) => {
     try {
         console.log("Starting encrypted login process...");

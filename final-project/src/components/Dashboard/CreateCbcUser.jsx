@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiPaperclip, FiChevronDown, FiDownload, FiX } from 'react-icons/fi';
+import { FiPaperclip, FiChevronDown, FiDownload, FiX, FiCheckCircle, FiCheck } from 'react-icons/fi';
 import './CreateCbcUser.css';
-import { uploadFile, fetchAddressByPincode } from '../../actions/dashboardActions';
+import { uploadFile, fetchAddressByPincode, cbcOnboard } from '../../actions/dashboardActions';
+import bankLogo from '../../assets/bank.png';
 
 
 const initialFormState = {
@@ -62,6 +63,8 @@ const CreateCbcUser = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [productFeaturesOpen, setProductFeaturesOpen] = useState(false);
   const [popupConfig, setPopupConfig] = useState({ show: false, message: '' });
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const productFeaturesRef = useRef(null);
 
@@ -111,14 +114,16 @@ const CreateCbcUser = () => {
   }, []);
 
   const validateMandatory = () => {
-    const required = [
-      'firstName', 'lastName', 'username', 'mobileNumber', 'email', 'adminName',
-      'addressLine1', 'city', 'pin', 'ceoName', 'companyName',
-      'step2AdminName', 'adminEmail', 'step2AdminMobileNumber', 'businessAddressLine1',
-      'step2City', 'step2PinBottom', 'accountNumber', 'gstNumber', 'numberOfStaff',
-      'agreementFromDate', 'agreementToDate', 'entityPanCard'
-    ];
-    return required.every(field => formData[field] && formData[field].toString().trim() !== '');
+    // Temporarily disabled for testing
+    return true
+    // const required = [
+    //   'firstName', 'lastName', 'username', 'mobileNumber', 'email', 'adminName',
+    //   'addressLine1', 'city', 'pin', 'ceoName', 'companyName',
+    //   'step2AdminName', 'adminEmail', 'step2AdminMobileNumber', 'businessAddressLine1',
+    //   'step2City', 'step2PinBottom', 'accountNumber', 'gstNumber', 'numberOfStaff',
+    //   'agreementFromDate', 'agreementToDate', 'entityPanCard'
+    // ];
+    // return required.every(field => formData[field] && formData[field].toString().trim() !== '');
   };
 
   // Pincode Auto-fill for Step 2 Business Address
@@ -277,9 +282,85 @@ const CreateCbcUser = () => {
       setPopupConfig({ show: true, message: 'Please Enter all required fields!!!' });
       return;
     }
-    setIsSubmitted(true);
-    console.log('Final Submission:', formData);
-    alert("User Created Successfully!");
+    setShowConfirmModal(true);
+  };
+
+  const handleFinalSubmit = async () => {
+    setShowConfirmModal(false);
+    
+    // Prepare nested payload as per screenshot
+    const payload = {
+      reqType: "CREATE",
+      username: "",
+      bankCode: "NSDL",
+      cbcDetails: {
+        BasicInformation: {
+          firstName: formData.firstName,
+          middleName: "",
+          lastName: formData.lastName,
+          mobileNumber: formData.mobileNumber,
+          email: formData.email,
+          country: formData.country || "INDIA",
+          state: formData.step2State,
+          district: formData.step2District,
+          city: formData.city,
+          pinCode: formData.pin
+        },
+        BusinessDetails: {
+          numberOfStaff: formData.numberOfStaff,
+          faxNumber: formData.faxNumber,
+          businessAddress: `${formData.businessAddressLine1} ${formData.businessAddressLine2}`.trim(),
+          ceoName: formData.ceoName,
+          companyName: formData.companyName,
+          gstNumber: formData.gstNumber,
+          institutionType: "CBC",
+          pan: formData.gstNumber ? formData.gstNumber.substring(2, 12) : "",
+          latitude: "0",
+          longitude: "0"
+        },
+        AdminDetails: {
+          adminName: formData.step2AdminName,
+          adminEmail: formData.adminEmail,
+          adminMobileNumber: formData.step2AdminMobileNumber
+        },
+        BankDetails: {
+          accountNumber: formData.accountNumber,
+          bankResolution: uploadedFiles.bankResolution?.url || ""
+        },
+        OtherDetails: {
+          affiliationFee: formData.affiliationFee,
+          telephoneNumber: formData.telephoneNumber,
+          entityId: formData.entityIdReferrer,
+          agreementStartDate: formData.agreementFromDate,
+          agreementEndDate: formData.agreementToDate,
+          entityPanCard: uploadedFiles.kyc?.url || "",
+          authorizedSignatoryKyc: uploadedFiles.kyc?.url || "",
+          certificateOfIncorporationDocumentPdf: uploadedFiles.incorporation?.url || "",
+          incorporationAddress: `${formData.incAddressLine1} ${formData.incAddressLine2}`.trim(),
+          firstAndLastPageAgreement: uploadedFiles.firstPage?.url || "",
+          lastPageAgreement: uploadedFiles.lastPage?.url || "",
+          productFeatures: formData.productFeatures,
+          termsAndConditions: formData.isAgreed ? "YES" : "NO",
+          businessProposal: uploadedFiles.proposal?.url || ""
+        }
+      }
+    };
+
+    console.log('Onboarding Payload:', payload);
+
+    const response = await cbcOnboard(payload);
+    
+    if (response.ok) {
+      setShowSuccessModal(true);
+    } else {
+      setPopupConfig({ show: true, message: response.error });
+    }
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccessModal(false);
+    // Reset or navigate away if needed
+    window.location.reload(); // Simple reset for now
   };
 
   const renderStep1 = () => (
@@ -574,6 +655,7 @@ const CreateCbcUser = () => {
         <button type="button" className="cancel-button" onClick={() => setStep(1)}>Cancel</button>
         <button type="submit" className="save-button" onClick={handleSubmit}>Save</button>
       </div>
+
     </>
   );
 
@@ -592,6 +674,50 @@ const CreateCbcUser = () => {
           {step === 1 ? renderStep1() : renderStep2()}
         </form>
       </div>
+
+      {popupConfig.show && (
+        <div className="toast-container">
+          <div className="error-popup-toast">
+            <FiX className="toast-icon" />
+            <span className="toast-message">{popupConfig.message}</span>
+            <button className="toast-close-btn" onClick={() => setPopupConfig({ show: false, message: '' })}>
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="confirm-modal-box">
+            <h2 className="modal-title">Are you sure you want to Create this User?</h2>
+            <p className="modal-message">
+              Please review all the entered details carefully before confirming, as creating this user will permanently add them to the system.
+            </p>
+            <div className="modal-actions">
+              <button className="modal-no-btn" onClick={() => setShowConfirmModal(false)}>NO</button>
+              <button className="modal-yes-btn" onClick={handleFinalSubmit}>Yes Create</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="success-modal-box">
+            <div className="modal-logo-container">
+              <img src={bankLogo} alt="NSDL Logo" className="modal-logo" />
+            </div>
+            <div className="success-icon-container">
+              <div className="success-circle">
+                <FiCheck className="success-check-icon" />
+              </div>
+            </div>
+            <h2 className="success-title">User Created Successfully!</h2>
+            <button className="done-btn" onClick={handleCloseSuccess}>Done</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

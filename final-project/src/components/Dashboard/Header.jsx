@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MdNotificationsNone, MdArrowDropDown, MdClose, MdCheck, MdMenu } from 'react-icons/md';
+import { MdNotificationsNone, MdArrowDropDown, MdClose, MdCheck, MdMenuOpen } from 'react-icons/md';
 import { FiUser, FiLogOut } from 'react-icons/fi';
 import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineKey } from 'react-icons/hi';
@@ -73,7 +73,13 @@ const Header = ({ setIsCollapsed, isCollapsed }) => {
                         onClick={() => setIsCollapsed(!isCollapsed)}
                         aria-label="Toggle Sidebar"
                     >
-                        <MdMenu />
+                        <MdMenuOpen 
+                            style={{ 
+                                transform: isCollapsed ? 'rotate(180deg)' : 'none',
+                                transition: 'transform 0.3s ease',
+                                fontSize: '24px'
+                            }} 
+                        />
                     </button>
                     {/* <h1 className="header-title">{headerTitle()}</h1> */}
                 </div>

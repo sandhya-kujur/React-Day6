@@ -218,31 +218,39 @@
 .login-toast {
     position: fixed;
     top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 25px;
-    border-radius: 50px;
+    right: 30px;
+    padding: 12px 25px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 12px;
     background-color: #d8432e;
     color: white;
-    min-width: 400px;
-    border: 1px solid rgba(0,0,0,0.1);
-    animation: fadeInDown 0.4s ease;
+    min-width: 350px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    animation: fadeInRight 0.4s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 5000;
 }
 
-@keyframes fadeInDown {
-    from { transform: translate(-50%, -20px); opacity: 0; }
-    to { transform: translate(-50%, 0); opacity: 1; }
+@keyframes fadeInRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .success-toast {
-    background-color: #4caf50;
+    background-color: #22c55e;
 }
 
 .error-toast {
-    background-color: #d8432e;
+    background-color: #ef4444;
 }
 
 .toast-icon {
@@ -257,15 +265,20 @@
 }
 
 .toast-close-btn {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
+    background-color: rgba(255, 255, 255, 0.4);
+    color: #1e293b;
     border: none;
-    padding: 5px 15px;
-    border-radius: 20px;
+    padding: 6px 14px;
+    border-radius: 6px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
+    margin-left: 10px;
+}
+
+.toast-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.6);
 }
 
 /* Modals */
@@ -283,46 +296,135 @@
     backdrop-filter: blur(1px);
 }
 
-.login-success-modal, .login-error-modal {
+.login-success-modal {
     background: white;
-    padding: 40px;
-    border-radius: 12px;
+    padding: 40px 50px;
+    border-radius: 24px;
     width: 90%;
-    max-width: 400px;
+    max-width: 550px;
     text-align: center;
-    border: 1px solid #e2e8f0;
+    border: none;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
-.login-success-modal h3 {
+.modal-title {
+    font-size: 26px;
+    font-weight: 800;
     color: #1e293b;
-    margin-bottom: 30px;
-    font-size: 20px;
+    margin-bottom: 35px;
 }
 
-.modal-actions {
+.modal-actions-success {
     display: flex;
-    gap: 15px;
     justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
 }
 
-.modal-btn-ok {
+.modal-btn-ok-red {
     background: #8b0000;
     color: white;
     border: none;
-    padding: 10px 30px;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 10px 45px;
+    border-radius: 8px;
+    font-weight: 800;
     cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    min-width: 120px;
 }
 
-.modal-btn-no {
-    background: #f1f5f9;
-    color: #475569;
-    border: none;
-    padding: 10px 30px;
-    border-radius: 6px;
-    font-weight: 600;
+.modal-btn-no-outline {
+    background: white;
+    color: #8b0000;
+    border: 1px solid #8b0000;
+    padding: 10px 45px;
+    border-radius: 8px;
+    font-weight: 800;
     cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    min-width: 120px;
+}
+
+.modal-btn-ok-red:hover {
+    background: #700000;
+    transform: scale(1.05);
+}
+
+.modal-btn-no-outline:hover {
+    background: #fff1f1;
+    transform: scale(1.05);
+}
+
+.login-error-modal {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 480px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modal-close-x {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #8b0000;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-icon-wrapper {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-circle-icon {
+    font-size: 80px;
+    color: #ff5252;
+}
+
+.error-status-text {
+    color: #ff5252;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.error-detail-text {
+    color: #1e293b;
+    font-size: 16px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-btn-okay {
+    background: #8b0000;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.modal-btn-okay:hover {
+    background: #700000;
 }
 
 .error-message {

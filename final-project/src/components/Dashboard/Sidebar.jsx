@@ -1,48 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
-    MdDashboard, 
-    MdOutlineListAlt, 
-    MdAccountBalanceWallet, 
     MdKeyboardDoubleArrowLeft, 
     MdKeyboardDoubleArrowRight, 
-    MdPersonAdd,
     MdExpandMore,
     MdExpandLess,
-    MdOutlineInsertChart
+    MdAccountBalanceWallet
 } from 'react-icons/md';
-import { FaUserCog, FaFileInvoiceDollar, FaFileAlt } from 'react-icons/fa';
+import { FaUsersCog } from 'react-icons/fa';
+import { IoSpeedometerOutline, IoDocumentTextOutline } from 'react-icons/io5';
 import bankLogo from '../../assets/bank.png';
 import './Sidebar.css';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const location = useLocation();
-    const isDashboardActive = location.pathname === '/dashboard';
-    const isUsersActive = location.pathname.startsWith('/dashboard/users');
-    const isAuditActive = location.pathname.startsWith('/dashboard/audit');
-    const isReportsActive = location.pathname.startsWith('/dashboard/reports');
-    const isWalletActive = location.pathname.startsWith('/dashboard/wallet');
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [visualActive, setVisualActive] = useState('');
     
-    const [userMenuOpen, setUserMenuOpen] = useState(isUsersActive);
-    const [reportsMenuOpen, setReportsMenuOpen] = useState(isReportsActive);
-
-    // Read userType from sessionStorage
+    // Read username and userType from sessionStorage
+    const storedUsername = sessionStorage.getItem('username') || '';
     const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
     const userType = userData?.userType || userData?.userInfo?.userType || '';
-    const isMaker = userType.toLowerCase().endsWith('_maker');
+    
+    // Check if user is a Maker (for showing Create User)
+    const isMaker = storedUsername.toLowerCase().endsWith('_maker') || userType.toLowerCase().endsWith('_maker');
+    // Check if user is a Checker (for restricting to User Request only)
+    const isChecker = storedUsername.toLowerCase().endsWith('_checker');
 
-    // Sync menu state when navigation section changes
+    // Sync menu state and visual active state when navigation section changes
     useEffect(() => {
-        if (isUsersActive) setUserMenuOpen(true);
-        if (isReportsActive) setReportsMenuOpen(true);
-    }, [isUsersActive, isReportsActive]);
-
-    const handleLinkClick = () => {
-        if (!isUsersActive) setUserMenuOpen(false);
-        if (!isReportsActive) setReportsMenuOpen(false);
-    };
-
-    const isAnyMenuOpen = userMenuOpen || reportsMenuOpen;
+        const path = location.pathname;
+        if (path.startsWith('/dashboard/users')) {
+            setVisualActive('users');
+            setUserMenuOpen(true);
+        } else if (path === '/dashboard') {
+            setVisualActive('dashboard');
+            setUserMenuOpen(false);
+        } else if (path.startsWith('/dashboard/audit')) {
+            setVisualActive('audit');
+            setUserMenuOpen(false);
+        } else if (path.startsWith('/dashboard/wallet')) {
+            setVisualActive('wallet');
+            setUserMenuOpen(false);
+        }
+    }, [location.pathname]);
 
     return (
         <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
@@ -54,10 +55,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                 <NavLink
                     to="/dashboard"
                     end
-                    className={() => (isDashboardActive && !isAnyMenuOpen) ? 'nav-item active' : 'nav-item'}
-                    onClick={handleLinkClick}
+                    className={() => visualActive === 'dashboard' ? 'nav-item active' : 'nav-item'}
+                    onClick={() => setVisualActive('dashboard')}
                 >
-                    <MdDashboard className="nav-icon" />
+                    <IoSpeedometerOutline className="nav-icon" />
                     {!isCollapsed && <span className="nav-text">Dashboard</span>}
                 </NavLink>
 
@@ -66,16 +67,16 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                 <div className="menu-group">
                     <button
                         type="button"
-                        className={(userMenuOpen) ? 'nav-item active' : 'nav-item'}
+                        className={visualActive === 'users' ? 'nav-item active' : 'nav-item'}
                         onClick={() => {
                             setUserMenuOpen(!userMenuOpen);
-                            if (!userMenuOpen) setReportsMenuOpen(false);
+                            setVisualActive('users');
                         }}
                     >
-                        <FaUserCog className="nav-icon" />
+                        <FaUsersCog className="nav-icon" />
                         {!isCollapsed && (
                             <>
-                                <span className="nav-text">Bank User Management</span>
+                                <span className="nav-text">User Management</span>
                                 {userMenuOpen ? <MdExpandLess className="arrow-icon" /> : <MdExpandMore className="arrow-icon" />}
                             </>
                         )}
@@ -87,26 +88,18 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                                 <NavLink
                                     to="/dashboard/users/create"
                                     className={({ isActive }) => isActive ? 'sub-nav-item active' : 'sub-nav-item'}
+                                    onClick={() => setVisualActive('users')}
                                 >
-                                    <MdPersonAdd className="nav-icon sub-nav-icon" />
-                                    <span className="nav-text">Create User</span>
+                                    <span className="nav-text">Create CBC User</span>
                                 </NavLink>
                             )}
 
                             <NavLink
                                 to="/dashboard/users/requests"
                                 className={({ isActive }) => isActive ? 'sub-nav-item active' : 'sub-nav-item'}
+                                onClick={() => setVisualActive('users')}
                             >
-                                <FaFileInvoiceDollar className="nav-icon sub-nav-icon" />
                                 <span className="nav-text">User Request</span>
-                            </NavLink>
-
-                            <NavLink
-                                to="/dashboard/users/list"
-                                className={({ isActive }) => isActive ? 'sub-nav-item active' : 'sub-nav-item'}
-                            >
-                                <FaFileAlt className="nav-icon sub-nav-icon" />
-                                <span className="nav-text">User List Report</span>
                             </NavLink>
                         </div>
                     )}
@@ -114,49 +107,22 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
 
                 <NavLink
                     to="/dashboard/audit"
-                    className={() => (isAuditActive && !isAnyMenuOpen) ? 'nav-item active' : 'nav-item'}
-                    onClick={handleLinkClick}
+                    className={() => visualActive === 'audit' ? 'nav-item active' : 'nav-item'}
+                    onClick={() => setVisualActive('audit')}
                 >
-                    <MdOutlineListAlt className="nav-icon" />
+                    <IoDocumentTextOutline className="nav-icon" />
                     {!isCollapsed && <span className="nav-text">Audit Trail</span>}
                 </NavLink>
 
-                <div className="menu-group">
-                    <button
-                        type="button"
-                        className={(reportsMenuOpen) ? 'nav-item active' : 'nav-item'}
-                        onClick={() => {
-                            setReportsMenuOpen(!reportsMenuOpen);
-                            if (!reportsMenuOpen) setUserMenuOpen(false);
-                        }}
-                    >
-                        <MdOutlineInsertChart className="nav-icon" />
-                        {!isCollapsed && (
-                            <>
-                                <span className="nav-text">Reports</span>
-                                {reportsMenuOpen ? <MdExpandLess className="arrow-icon" /> : <MdExpandMore className="arrow-icon" />}
-                            </>
-                        )}
-                    </button>
-                </div>
-
                 <NavLink
                     to="/dashboard/wallet"
-                    className={() => (isWalletActive && !isAnyMenuOpen) ? 'nav-item active' : 'nav-item'}
-                    onClick={handleLinkClick}
+                    className={() => visualActive === 'wallet' ? 'nav-item active' : 'nav-item'}
+                    onClick={() => setVisualActive('wallet')}
                 >
                     <MdAccountBalanceWallet className="nav-icon" />
                     {!isCollapsed && <span className="nav-text">Wallet Adjustment</span>}
                 </NavLink>
             </nav>
-
-            <button
-                className="collapse-btn"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                aria-label="Toggle Sidebar"
-            >
-                {isCollapsed ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
-            </button>
         </div>
     );
 };

@@ -29,10 +29,12 @@ const DashboardHome = () => {
 
     return (
         <div className="dashboard-home">
-            <img src={nsdlWatermark} alt="NSDL Watermark" className="watermark-bg-image" />
-            <div className="welcome-text-overlay">
-                <h2>Welcome to NSDL</h2>
-                <p>Banking made easy - Just in a jiffy</p>
+            <div className="welcome-container">
+                <img src={nsdlWatermark} alt="NSDL Watermark" className="watermark-bg-image" />
+                <div className="welcome-text-overlay">
+                    <h2>Welcome to NSDL</h2>
+                    <p>Banking made easy - Just in a jiffy</p>
+                </div>
             </div>
         </div>
     );
