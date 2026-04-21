@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MdNotifications, MdArrowDropDown, MdClose, MdCheck } from 'react-icons/md';
-import { FaUserCircle } from 'react-icons/fa';
+import { MdNotificationsNone, MdArrowDropDown, MdClose, MdCheck, MdMenu } from 'react-icons/md';
 import { FiUser, FiLogOut } from 'react-icons/fi';
+import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineKey } from 'react-icons/hi';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { sendChangePasswordOtp } from '../../actions/dashboardActions';
 import './Header.css';
 
-const Header = () => {
+const Header = ({ setIsCollapsed, isCollapsed }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -21,26 +21,18 @@ const Header = () => {
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
+    
     const username = sessionStorage.getItem('username') || 'Guest';
 
     const headerTitle = () => {
         const path = location.pathname;
-        if (path.startsWith('/dashboard/users/create')) {
-            return 'User Management / Create CBC User';
-        }
-        if (path.startsWith('/dashboard/users/requests')) {
-            return 'User Management / User Request';
-        }
-        if (path.startsWith('/dashboard/audit')) {
-            return 'Audit Trail';
-        }
-        if (path.startsWith('/dashboard/wallet')) {
-            return 'Wallet Adjustment';
-        }
+        if (path.startsWith('/dashboard/users/create')) return 'User Management / Create CBC User';
+        if (path.startsWith('/dashboard/users/requests')) return 'User Management / User Request';
+        if (path.startsWith('/dashboard/audit')) return 'Audit Trail';
+        if (path.startsWith('/dashboard/wallet')) return 'Wallet Adjustment';
         return 'Dashboard';
     };
 
-    // Load user data from session storage for profile
     useEffect(() => {
         const storedData = sessionStorage.getItem('user_data');
         if (storedData) {
@@ -66,7 +58,6 @@ const Header = () => {
     };
 
     const handleProfileClick = () => {
-        // Refresh data from sessionStorage in case it was just loaded
         const storedData = sessionStorage.getItem('user_data');
         if (storedData) setUserData(JSON.parse(storedData));
         setDropdownOpen(false);
@@ -77,19 +68,24 @@ const Header = () => {
         <>
             <header className="dashboard-header">
                 <div className="header-left">
-                    <h1 className="header-title">{headerTitle()}</h1>
+                    <button 
+                        className="menu-toggle-btn" 
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        aria-label="Toggle Sidebar"
+                    >
+                        <MdMenu />
+                    </button>
+                    {/* <h1 className="header-title">{headerTitle()}</h1> */}
                 </div>
                 <div className="header-right">
                     <button className="notification-btn" aria-label="Notifications">
-                        <MdNotifications />
+                        <MdNotificationsNone />
                     </button>
                     <div className="user-profile-container" ref={dropdownRef}>
                         <div className="user-profile" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                            <FaUserCircle className="user-avatar" />
+                            <FaUserCircle className="user-avatar-icon" />
                             <span className="user-name">{username}</span>
-                            <div className="dropdown-circle-btn">
-                                <MdArrowDropDown />
-                            </div>
+                            <MdArrowDropDown className="dropdown-arrow-icon" />
                         </div>
 
                         {dropdownOpen && (

@@ -3,9 +3,9 @@ import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { RiCalendarEventFill } from 'react-icons/ri';
 import './CustomDatePicker.css';
 
-const CustomDatePicker = ({ selectedDate, onChange, label }) => {
+const CustomDatePicker = ({ selectedDate, onChange, label, placeholder }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [viewDate, setViewDate] = useState(new Date(selectedDate));
+    const [viewDate, setViewDate] = useState(new Date(selectedDate || new Date()));
     const containerRef = useRef(null);
 
     const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
@@ -50,7 +50,8 @@ const CustomDatePicker = ({ selectedDate, onChange, label }) => {
 
         // Days of current month
         for (let d = 1; d <= totalDays; d++) {
-            const isSelected = new Date(selectedDate).getDate() === d && 
+            const isSelected = selectedDate && 
+                               new Date(selectedDate).getDate() === d && 
                                new Date(selectedDate).getMonth() === viewDate.getMonth() &&
                                new Date(selectedDate).getFullYear() === viewDate.getFullYear();
             
@@ -73,8 +74,8 @@ const CustomDatePicker = ({ selectedDate, onChange, label }) => {
         <div className="custom-datepicker" ref={containerRef}>
             <div className="datepicker-input-wrapper" onClick={() => setIsOpen(!isOpen)}>
                 <label className="datepicker-label">{label}</label>
-                <div className="datepicker-display">
-                    {selectedDate.split('-').reverse().join('/')}
+                <div className={`datepicker-display ${!selectedDate ? 'placeholder-text' : ''}`}>
+                    {selectedDate ? selectedDate.split('-').reverse().join('/') : (placeholder || 'Select date')}
                     <RiCalendarEventFill className="calendar-svg-icon" />
                 </div>
             </div>

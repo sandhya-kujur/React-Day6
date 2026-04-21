@@ -1,346 +1,229 @@
-.user-request-container {
-    padding: 0;
-    width: 100%;
-    animation: fadeIn 0.4s ease;
-    background-color: #ffffff;
+.user-request-page {
+    padding: 20px 30px;
+    background-color: #f8fafc;
+    min-height: 100%;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.breadcrumb {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 20px;
 }
 
-.search-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 35px 25px;
-    margin: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #eeeeee;
+.active-breadcrumb {
+    color: #475569;
+    font-weight: 500;
 }
 
-.radio-group {
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+.request-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+}
+
+.search-mode-selector {
     display: flex;
-    gap: 40px;
-    margin-bottom: 30px;
-    padding-left: 5px;
+    gap: 30px;
+    margin-bottom: 25px;
 }
 
-.radio-label {
+.mode-option {
     display: flex;
     align-items: center;
-    cursor: pointer;
-    font-size: 15px;
+    gap: 10px;
+    font-size: 14px;
     font-weight: 500;
-    color: #333;
+    color: #334155;
+    cursor: pointer;
     position: relative;
-    padding-left: 30px;
 }
 
-.radio-label input {
+.mode-option input {
     position: absolute;
     opacity: 0;
-    cursor: pointer;
 }
 
-.custom-radio {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border: 2px solid #ccc;
+.radio-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #cbd5e1;
     border-radius: 50%;
-    transition: all 0.2s ease;
+    display: inline-block;
+    position: relative;
 }
 
-.radio-label:hover input ~ .custom-radio {
+.mode-option input:checked + .radio-custom {
     border-color: #8b0000;
 }
 
-.radio-label input:checked ~ .custom-radio {
-    border-color: #8b0000;
-    box-shadow: 0 0 0 10px rgba(139, 0, 0, 0.1);
-}
-
-.custom-radio:after {
-    content: "";
+.mode-option input:checked + .radio-custom::after {
+    content: '';
     position: absolute;
-    display: none;
-}
-
-.radio-label input:checked ~ .custom-radio:after {
-    display: block;
-}
-
-.radio-label .custom-radio:after {
     top: 3px;
     left: 3px;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
+    background-color: #8b0000;
     border-radius: 50%;
-    background: #8b0000;
 }
 
-.search-form {
+.filter-toolbar {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     gap: 12px;
+    margin-bottom: 25px;
     align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    margin-bottom: 20px; /* Space down the boxes */
+    flex-wrap: wrap;
 }
 
-.form-field {
-    position: relative;
-    width: 170px; /* Shrink to absolute fit */
-    flex: 0 0 auto;
-}
-
-.form-field label {
-    position: absolute;
-    top: -10px;
-    left: 12px;
-    background-color: #fff;
-    padding: 0 5px;
-    font-size: 12px;
-    color: #666;
-    z-index: 1;
-}
-
-.form-field input {
-    width: 100%;
-    height: 45px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 0 15px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    outline: none;
-    transition: border-color 0.2s;
-    background-color: #fff;
-    cursor: pointer;
-}
-
-/* Custom Dropdown Styles */
-.custom-dropdown-container {
-    position: relative;
-}
-
-.custom-dropdown-header {
-    width: 100%;
-    height: 45px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 0 15px;
+.search-input-wrapper, 
+.unified-date-picker, 
+.dropdown-header {
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
     display: flex;
     align-items: center;
+    padding: 0 12px;
+    background: #ffffff;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    min-width: 180px;
+    position: relative;
+}
+
+.search-icon {
+    color: #94a3b8;
+    margin-right: 10px;
+}
+
+.search-input-wrapper input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+/* Unified Date Picker Styles */
+.unified-date-picker {
+    width: 350px; /* Slightly wider for better spacing */
     justify-content: space-between;
-    background-color: #fff;
+    gap: 0;
+    padding: 0 15px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.date-pick-item {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-pick-item .custom-datepicker {
+    width: 100% !important;
+    height: 100%;
+}
+
+/* Hide internal CustomDatePicker elements when used in unified bar */
+.unified-date-picker .datepicker-label,
+.unified-date-picker .calendar-svg-icon {
+    display: none !important;
+}
+
+.unified-date-picker .datepicker-display {
+    border: none !important;
+    background: transparent !important;
+    height: 100% !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    font-size: 15px !important; /* Slightly larger for readability */
+    color: #1e293b !important;
+    font-weight: 500 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centering the text */
+}
+
+.unified-date-picker .datepicker-display.placeholder-text {
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+}
+
+.unified-date-picker .datepicker-display:hover {
+    border: none !important;
+}
+
+.date-arrow {
+    color: #94a3b8;
+    font-weight: 500;
+    margin: 0 5px;
     font-size: 16px;
-    font-weight: 600;
-    color: #333;
+    display: flex;
+    align-items: center;
 }
 
-.dropdown-arrow-icon {
-    color: #999;
-    font-size: 18px;
-    transition: transform 0.2s;
+.unified-calendar-icon {
+    color: #94a3b8;
+    font-size: 20px;
+    margin-left: 10px;
+    flex-shrink: 0;
 }
 
-.dropdown-arrow-icon.open {
+.dropdown-wrapper {
+    position: relative;
+    width: 140px;
+}
+
+.dropdown-header {
+    cursor: pointer;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.dropdown-header svg.open {
     transform: rotate(180deg);
 }
 
-.custom-dropdown-list {
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    z-index: 1000;
-    overflow: hidden;
-    border: 1px solid #eee;
-}
-
-.dropdown-item {
-    padding: 12px 15px;
-    cursor: pointer;
-    color: #666;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s;
-    font-size: 14px;
-}
-
-.dropdown-item:hover {
-    background-color: #f9f9f9;
-}
-
-.dropdown-item.selected {
-    color: #8b0000;
-    font-weight: 600;
-    background-color: #eee;
-}
-
-.check-icon {
-    color: #8b0000;
-    font-size: 16px;
-}
-
-.red-text {
-    color: #333 !important;
-}
-
-.form-field input:focus, 
-.form-field select:focus {
-    border-color: #8b0000;
-}
-
-/* Error Styles */
-.form-field.has-error input {
-    border-color: #ff0000;
-}
-
-.form-field.has-error label {
-    color: #ff0000 !important;
-}
-
-.error-message {
-    display: block;
-    color: #ff0000;
-    font-size: 12px;
-    margin-top: 5px;
-    position: absolute;
-    bottom: -18px;
-    left: 5px;
-}
-
-/* Floating Label Specifics */
-.floating-label-field {
-    position: relative;
-    /* margin-top: 10px; Removed to fix vertical alignment */
-}
-
-.floating-label-field label {
-    position: absolute;
-    left: 15px;
-    top: 14px; /* Inside the box */
-    font-size: 14px;
-    color: #999;
-    pointer-events: none;
-    transition: all 0.2s ease;
-    background-color: transparent;
-    padding: 0;
-}
-
-.floating-label-field.floated label {
-    top: -10px;
-    left: 12px;
-    font-size: 12px;
-    color: #666;
-    background-color: #fff;
-    padding: 0 5px;
-}
-
-.floating-label-field input::placeholder {
-    color: transparent;
-    transition: color 0.2s;
-}
-
-.floating-label-field input:focus::placeholder {
-    color: #bbb;
-}
-
-.search-form-username {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    padding-bottom: 20px;
-    width: 100%;
-}
-
-.search-form-username .form-field {
-    flex: 0 1 500px;
-    max-width: 100%;
-}
-
-.search-form-username .submit-btn {
-    border-radius: 12px;
-    min-width: 120px;
-}
-
-.input-with-icon {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-    font-size: 18px;
-    pointer-events: none;
-}
-
-.submit-btn {
-    background-color: #8b0000;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 0 35px;
-    height: 45px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.submit-btn:hover {
-    background-color: #700000;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .search-form {
-        flex-wrap: wrap;
-    }
-    .form-field {
-        min-width: calc(50% - 15px);
-    }
-    .submit-btn {
-        width: 100%;
-    }
-}
-/* Toast Notification Styles */
+/* Toast Notification Styles - Capsule Style */
 .wallet-toast {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px 20px;
-    border-radius: 8px;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 25px;
+    border-radius: 50px; /* Full capsule shape */
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 2000;
-    min-width: 380px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    z-index: 3000;
+    background-color: #d8432e; /* The specific orange-red from screenshot */
     color: white;
-    animation: slideIn 0.3s ease;
+    min-width: 450px;
+    max-width: 90%;
+    animation: fadeInDown 0.4s ease;
 }
 
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+@keyframes fadeInDown {
+    from { transform: translate(-50%, -20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
 }
 
 .success-toast {
@@ -348,34 +231,212 @@
 }
 
 .error-toast {
-    background-color: #db4437;
+    background-color: #d8432e;
 }
 
 .toast-icon {
     font-size: 22px;
     flex-shrink: 0;
+    color: white;
 }
 
 .toast-message {
     flex: 1;
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 16px;
     font-weight: 500;
+    color: #ffffff;
 }
 
 .toast-close-btn {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: #fce4e4; /* Light pink background */
     color: #333;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.toast-close-btn:hover {
+    background-color: #f1b0b7;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.dropdown-item {
+    padding: 10px 15px;
     font-size: 13px;
+    color: #1e293b;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+}
+
+.dropdown-item.selected {
+    color: #8b0000;
+    font-weight: 600;
+    background-color: #fff1f1;
+}
+
+.submit-action-btn {
+    background-color: #8b0000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    padding: 0 25px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.toast-close-btn:hover {
-    background-color: #ffffff;
+.submit-action-btn:hover {
+    background-color: #700000;
     transform: translateY(-1px);
+}
+
+.download-excel-btn {
+    background-color: #8b0000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    height: 40px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.download-excel-btn:hover {
+    background-color: #700000;
+}
+
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+    border: 1px solid #f1f5f9;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.user-request-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.user-request-table th {
+    background-color: #fcfcfc;
+    padding: 12px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.user-request-table th svg {
+    margin-left: 5px;
+    vertical-align: middle;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.user-request-table td {
+    padding: 12px 15px;
+    font-size: 13px;
+    color: #475569;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-avatar {
+    font-size: 24px;
+    color: #cbd5e1;
+}
+
+/* Pagination Footer */
+.pagination-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.rows-selector select {
+    margin-left: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    outline: none;
+}
+
+.go-to-page input {
+    width: 35px;
+    height: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    text-align: center;
+    margin-left: 8px;
+    outline: none;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-number, .page-arrow {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.page-number.active {
+    border-color: #8b0000;
+    color: #8b0000;
+    font-weight: 600;
+}
+
+.page-dots {
+    color: #94a3b8;
+    padding: 0 4px;
 }

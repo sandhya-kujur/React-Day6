@@ -11,7 +11,7 @@ const DashboardLayout = () => {
         <div className={`dashboard-layout ${isCollapsed ? 'collapsed' : ''}`}>
             <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
             <div className="dashboard-main">
-                <Header />
+                <Header setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} />
                 <div className="dashboard-content">
                     <Outlet />
                 </div>
