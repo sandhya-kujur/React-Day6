@@ -325,9 +325,18 @@ const LoginPage = () => {
                         <div className="modal-actions-success">
                             <button type="button" className="modal-btn-ok-red" onClick={() => navigate('/dashboard')}>OK</button>
                             <button type="button" className="modal-btn-no-outline" onClick={async () => { 
-                                await handleLogout();
+                                const result = await handleLogout();
+                                if (result && result.success) {
+                                    setToastMessage(result.statusDesc || "Logout Successful");
+                                    setToastType('success');
+                                    setShowToast(true);
+                                    sessionStorage.clear();
+                                } else {
+                                    setToastMessage(result?.statusDesc || "Logout failed");
+                                    setToastType('error');
+                                    setShowToast(true);
+                                }
                                 setShowSuccessModal(false); 
-                                setShowToast(false); 
                             }}>NO</button>
                         </div>
                     </div>

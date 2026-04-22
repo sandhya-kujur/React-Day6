@@ -6,12 +6,14 @@ import { FaUserCircle } from 'react-icons/fa';
 import { HiOutlineKey } from 'react-icons/hi';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { sendChangePasswordOtp } from '../../actions/dashboardActions';
+import { handleLogout as logoutApiCall } from '../../actions/loginActions';
 import './Header.css';
 
 const Header = ({ setIsCollapsed, isCollapsed }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [showProfileModal, setShowProfileModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState('error');
@@ -52,9 +54,29 @@ const Header = ({ setIsCollapsed, isCollapsed }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
         setDropdownOpen(false);
-        navigate('/');
+        setShowLogoutModal(true);
+    };
+
+    const confirmLogout = async () => {
+        const result = await logoutApiCall();
+        if (result.success) {
+            setToastMessage(result.statusDesc || "Logout Successful");
+            setToastType('success');
+            setShowToast(true);
+            
+            // Wait for 2 seconds to show the toast before redirecting
+            setTimeout(() => {
+                sessionStorage.clear();
+                navigate('/');
+            }, 2000);
+        } else {
+            setToastMessage(result.statusDesc || "Logout failed. Please try again.");
+            setToastType('error');
+            setShowToast(true);
+            setShowLogoutModal(false);
+        }
     };
 
     const handleProfileClick = () => {
@@ -106,7 +128,7 @@ const Header = ({ setIsCollapsed, isCollapsed }) => {
                                     <span>Change Password</span>
                                 </div>
                                 <div className="dropdown-divider"></div>
-                                <div className="dropdown-item" onClick={handleLogout}>
+                                <div className="dropdown-item" onClick={handleLogoutClick}>
                                     <FiLogOut className="dropdown-item-icon" />
                                     <span>Logout</span>
                                 </div>
@@ -262,6 +284,21 @@ const Header = ({ setIsCollapsed, isCollapsed }) => {
                             }}>
                                 Verify Otp
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Logout Confirmation Modal */}
+            {showLogoutModal && (
+                <div className="profile-modal-overlay">
+                    <div className="logout-confirm-modal">
+                        <div className="logout-modal-content">
+                            <h3>Are you sure want to Logout?</h3>
+                            <div className="logout-actions">
+                                <button className="logout-yes-btn" onClick={confirmLogout}>YES</button>
+                                <button className="logout-no-btn" onClick={() => setShowLogoutModal(false)}>NO</button>
+                            </div>
                         </div>
                     </div>
                 </div>

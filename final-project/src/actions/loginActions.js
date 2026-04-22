@@ -128,6 +128,9 @@ export const handleLogin = async (credentials) => {
         const isSuccess = response.status === 200;
 
         if (isSuccess) {
+            // Save credentials for logout process as requested
+            sessionStorage.setItem('login_password', credentials.password);
+            
             return { 
                 success: true, 
                 data: decryptedData || result.data || { user: credentials.username } 
@@ -147,20 +150,53 @@ export const handleLogin = async (credentials) => {
 };
 
 export const handleLogout = async () => {
+    const logoutUrl = 'https://services-encr.iserveu.online/dev/nsdlab-internal/user-authorization/logout';
+    const TOKEN = sessionStorage.getItem('access_token');
+    const PASS_KEY = 'QC62FQKXT2DQTO43LMWH5A44UKVPQ7LK5Y6HVHRQ3XTIKLDTB6HA';
+    
+    // Retrieve stored credentials from session
+    const username = sessionStorage.getItem('username');
+    const password = sessionStorage.getItem('login_password');
+
+    const payload = {
+        grant_type: 'password',
+        username: username || 'NA',
+        password: password || 'NA'
+    };
+
     try {
-        const logoutUrl = API_URL.replace('/login', '/logout');
+        const encryptedBody = encryptData(payload);
         const response = await fetch(logoutUrl, {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${AUTHORIZATION}`,
-                'Geo-Location': GeoLocation,
-                'Content-Type': 'application/json',
-                'User-Agent': 'Web',
-            }
+                'Authorization': `${TOKEN}`,
+                'pass_key': PASS_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ RequestData: encryptedBody })
         });
-        return response.ok;
+        
+        const result = await response.json();
+        let decryptedData = result;
+
+        if (result && result.ResponseData) {
+            try {
+                const decryptedString = decryptResponseData(result.ResponseData);
+                decryptedData = JSON.parse(decryptedString);
+            } catch (e) {
+                console.error("Failed to decrypt logout response:", e);
+            }
+        }
+
+        // Logic: Success if status is 'Success' or status_code 200
+        const isSuccess = decryptedData.status === 'Success' || decryptedData.status === 'SUCCESS' || response.status === 200;
+        
+        return { 
+            success: isSuccess, 
+            statusDesc: decryptedData.statusDesc || decryptedData.message || (isSuccess ? "Logout successful" : "Logout failed")
+        };
     } catch (error) {
         console.error("Logout failed:", error);
-        return false;
+        return { success: false, statusDesc: error.message };
     }
 };

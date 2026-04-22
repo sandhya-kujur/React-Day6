@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiChevronDown, FiDownload, FiChevronLeft, FiChevronRight, FiX } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiDownload, FiChevronLeft, FiChevronRight, FiX, FiMoreVertical } from 'react-icons/fi';
 import { MdCalendarToday, MdClose, MdCheck } from 'react-icons/md';
 import { FaUserCircle } from 'react-icons/fa';
 import { TiArrowUnsorted } from 'react-icons/ti';
 import CustomDatePicker from './CustomDatePicker';
+import UserProfileDetails from './UserProfileDetails';
 import { fetchUserList } from '../../actions/dashboardActions';
 import './UserRequest.css';
 
@@ -19,6 +20,7 @@ const UserRequest = () => {
     const [toastType, setToastType] = useState('error');
     const [searchResults, setSearchResults] = useState([]);
     const [selectedItems, setSelectedItems] = useState(new Set([3])); // Default select ID 3 as per screenshot
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
     const sessionUserType = userData?.userType || userData?.userInfo?.userType || '';
@@ -46,7 +48,7 @@ const UserRequest = () => {
     const handleSearchChange = (e) => setUsername(e.target.value);
     
     const handleDownloadExcel = () => {
-        const dataToExport = searchResults.length > 0 ? searchResults : [dummyRow];
+        const dataToExport = searchResults.length > 0 ? searchResults : dummyRows;
         const headers = ["S. No.", "Username", "Employee ID", "Employee Name", "User Role", "Email ID", "Updated By", "Updated On", "Status", "Operation Type", "Created By", "Creation Date", "Mobile Number", "Remarks"];
         
         const csvContent = [
@@ -207,7 +209,9 @@ const UserRequest = () => {
                     updatedStatus: 'Select',
                     updatePhone: info1.mobileNumber || 'N/A',
                     updateEmail: info1.email || 'N/A',
-                    action: 'Update'
+                    action: 'Update',
+                    updateDisabled: item.productFeatureUpdateReq === false,
+                    originalData: item
                 };
             });
 
@@ -304,9 +308,16 @@ const UserRequest = () => {
                 <span>Bank User Management</span> / <span className="active-breadcrumb">User Request</span>
             </div>
 
-            <h1 className="page-title">User Request</h1>
+            {selectedUser ? (
+                <UserProfileDetails 
+                    user={selectedUser} 
+                    onBack={() => setSelectedUser(null)} 
+                />
+            ) : (
+                <>
+                    <h1 className="page-title">User Request</h1>
 
-            <div className="request-card">
+                    <div className="request-card">
                 <div className="search-mode-selector">
                     <label className="mode-option">
                         <input
@@ -450,6 +461,7 @@ const UserRequest = () => {
                                 <th>Update Phone <TiArrowUnsorted /></th>
                                 <th>Update Email <TiArrowUnsorted /></th>
                                 <th>Action <TiArrowUnsorted /></th>
+                                <th className="sticky-column">Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -495,8 +507,11 @@ const UserRequest = () => {
                                     </td>
                                     <td>{item.updatePhone}</td>
                                     <td>{item.updateEmail}</td>
-                                    <td className="action-cell-update">
+                                    <td className={`action-cell-update ${item.updateDisabled ? 'disabled' : ''}`}>
                                         {item.action}
+                                    </td>
+                                    <td className="sticky-column" onClick={() => setSelectedUser(item)}>
+                                        <FiMoreVertical className="details-icon" />
                                     </td>
                                 </tr>
                             ))}
@@ -569,7 +584,9 @@ const UserRequest = () => {
                         </button>
                     </div>
                 </div>
-            </div>
+                </div>
+                </>
+            )}
 
             {showToast && (
                 <div className="toast-container">

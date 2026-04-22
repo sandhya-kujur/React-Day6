@@ -422,6 +422,50 @@
     color: #700000;
 }
 
+.action-cell-update.disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+/* Sticky Column Styles */
+.sticky-column {
+    position: sticky !important;
+    right: 0;
+    z-index: 10;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+th.sticky-column {
+    background-color: #fcfcfc !important; /* Matches other headers */
+    z-index: 11;
+}
+
+td.sticky-column {
+    background-color: #ffffff; /* Opaque background for rows */
+    text-align: center;
+}
+
+/* Alternate row background for sticky column if needed */
+tr:nth-child(even) td.sticky-column {
+    background-color: #ffffff; 
+}
+
+.details-icon {
+    font-size: 20px;
+    color: #475569;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: color 0.2s;
+}
+
+.details-icon:hover {
+    color: #8b0000;
+}
+
+
 /* Pagination Footer */
 .pagination-footer {
     display: flex;
