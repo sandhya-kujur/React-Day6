@@ -312,7 +312,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background-color: #8b0000; /* Matching screenshot button style */
+    background-color: #8b0000;
     color: white;
     padding: 0 20px;
     height: 40px;

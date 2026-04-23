@@ -8,7 +8,7 @@ const WalletAdjustment = () => {
     const [userName, setUserName] = useState('');
     const [error, setError] = useState(false);
     const [showToast, setShowToast] = useState(false);
-    const [toastType, setToastType] = useState('error'); // 'success' or 'error'
+    const [toastType, setToastType] = useState('error'); 
     const [toastMessage, setToastMessage] = useState('');
     const [userDetails, setUserDetails] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -28,7 +28,6 @@ const WalletAdjustment = () => {
             const response = await fetchUserDetails(userName);
             const role = userName.startsWith("CBCM") ? "CBC Maker" : userName.startsWith("CBC") ? "CBC" : "Agent";
             if (!response.ok) {
-                // Exact message from screenshot
                 const msg = response.data?.message || `No user found with the username provided ${userName} in this user role ${role}`;
                 setToastMessage(msg);
                 setToastType('error');
@@ -194,7 +193,7 @@ const WalletAdjustment = () => {
                                 <label className="floating-label">Wallet</label>
                             </div>
 
-                            {/* Editable Remark */}
+                        
                             <div className="detail-input-group">
                                 <input 
                                     type="text" 

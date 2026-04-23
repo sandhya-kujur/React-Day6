@@ -275,7 +275,7 @@ const Header = ({ setIsCollapsed, isCollapsed }) => {
                                     setToastMessage("OTP sent successfully!");
                                     setToastType('success');
                                     setShowToast(true);
-                                    // You can trigger your OTP verification screen/logic here
+                                    //triggering OTP verification logic here
                                 } else {
                                     setToastMessage(result.data?.message || result.error || 'Unknown error occurred.');
                                     setToastType('error');

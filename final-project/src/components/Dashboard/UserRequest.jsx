@@ -19,7 +19,7 @@ const UserRequest = () => {
     const [toastMessage, setToastMessage] = useState('');
     const [toastType, setToastType] = useState('error');
     const [searchResults, setSearchResults] = useState([]);
-    const [selectedItems, setSelectedItems] = useState(new Set([3])); // Default select ID 3 as per screenshot
+    const [selectedItems, setSelectedItems] = useState(new Set([3]));
     const [selectedUser, setSelectedUser] = useState(null);
 
     const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
@@ -40,7 +40,7 @@ const UserRequest = () => {
     const [currentPage, setCurrentPage] = useState(6);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [goToPage, setGoToPage] = useState('9');
-    const totalPages = 50; // As per screenshot
+    const totalPages = 50; 
 
     // Sorting state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -88,7 +88,6 @@ const UserRequest = () => {
             direction = 'desc';
         }
         setSortConfig({ key, direction });
-        // Sorting logic would go here for real data
     };
 
     // --- Original Logic Handlers ---
@@ -177,7 +176,6 @@ const UserRequest = () => {
         const result = await fetchUserList(payload);
 
         if (result && result.success) {
-            // Mapping the specific nested structure provided: result.data.resultObj.result
             const apiResult = result.data.resultObj?.result || [];
             console.log("Mapping API Data:", apiResult);
             
@@ -225,7 +223,6 @@ const UserRequest = () => {
         }
     };
 
-    // Expanded dummy data from latest screenshot
     const dummyRows = [
         {
             id: 1,

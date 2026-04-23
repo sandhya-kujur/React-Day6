@@ -368,7 +368,7 @@
 }
 
 .error-toast {
-    background-color: #df364b; /* Matched reddish pink */
+    background-color: #df364b; 
 }
 
 .toast-icon {
@@ -386,7 +386,7 @@
 
 .toast-close-btn {
     background-color: #f8c9ce; /* Light pink background */
-    color: #111; /* Dark text */
+    color: #111;
     border: none;
     padding: 8px 14px;
     border-radius: 6px;

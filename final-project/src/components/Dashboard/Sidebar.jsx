@@ -17,7 +17,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [visualActive, setVisualActive] = useState('');
     
-    // Read username and userType from sessionStorage
+    // username and userType from sessionStorage
     const storedUsername = sessionStorage.getItem('username') || '';
     const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
     const userType = userData?.userType || userData?.userInfo?.userType || '';

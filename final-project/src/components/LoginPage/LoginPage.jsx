@@ -46,7 +46,6 @@ const LoginPage = () => {
             [name]: type === 'checkbox' ? checked : value
         }));
         
-        // Clear error when user types
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -60,7 +59,6 @@ const LoginPage = () => {
         setFocusedField(e.target.name);
     };
 
-    // Handle input blur for real-time validation
     const handleBlur = (e) => {
         const { name, value } = e.target;
         setFocusedField(null);

@@ -93,7 +93,7 @@ const CreateCbcUser = () => {
     proposal: proposalRef
   };
 
-  // Pre-fill username from session
+  //username from session
   useEffect(() => {
     const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
     const userName = userData?.userInfo?.userProfile?.userName || 'admin';
@@ -115,18 +115,18 @@ const CreateCbcUser = () => {
 
   const validateMandatory = () => {
     // Temporarily disabled for testing
-    return true
-    // const required = [
-    //   'firstName', 'lastName', 'username', 'mobileNumber', 'email', 'adminName',
-    //   'addressLine1', 'city', 'pin', 'ceoName', 'companyName',
-    //   'step2AdminName', 'adminEmail', 'step2AdminMobileNumber', 'businessAddressLine1',
-    //   'step2City', 'step2PinBottom', 'accountNumber', 'gstNumber', 'numberOfStaff',
-    //   'agreementFromDate', 'agreementToDate', 'entityPanCard'
-    // ];
-    // return required.every(field => formData[field] && formData[field].toString().trim() !== '');
+    //return true
+    const required = [
+      'firstName', 'lastName', 'username', 'mobileNumber', 'email', 'adminName',
+      'addressLine1', 'city', 'pin', 'ceoName', 'companyName',
+      'step2AdminName', 'adminEmail', 'step2AdminMobileNumber', 'businessAddressLine1',
+      'step2City', 'step2PinBottom', 'accountNumber', 'gstNumber', 'numberOfStaff',
+      'agreementFromDate', 'agreementToDate', 'entityPanCard'
+    ];
+    return required.every(field => formData[field] && formData[field].toString().trim() !== '');
   };
 
-  // Pincode Auto-fill for Step 2 Business Address
+  // Pincode Auto-fill through getState API for Step 2 Business Address
   useEffect(() => {
     const handlePincodeFill = async () => {
       if (formData.step2PinBottom && formData.step2PinBottom.length === 6) {
@@ -288,7 +288,7 @@ const CreateCbcUser = () => {
   const handleFinalSubmit = async () => {
     setShowConfirmModal(false);
     
-    // Prepare nested payload as per screenshot
+    // Prepare nested payload as per API specification
     const payload = {
       reqType: "CREATE",
       username: "",

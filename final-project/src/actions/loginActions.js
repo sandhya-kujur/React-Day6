@@ -124,11 +124,11 @@ export const handleLogin = async (credentials) => {
             }
         }
 
-        // Logic: Treat HTTP 200 as success as per user requirement
+        // Logic: Treat HTTP 200 as success 
         const isSuccess = response.status === 200;
 
         if (isSuccess) {
-            // Save credentials for logout process as requested
+            // Save credentials for logout process
             sessionStorage.setItem('login_password', credentials.password);
             
             return { 
@@ -136,7 +136,7 @@ export const handleLogin = async (credentials) => {
                 data: decryptedData || result.data || { user: credentials.username } 
             };
         } else {
-            // Take the message from decrypted data if available, else from raw result, else fallback
+            // Get the message from decrypted data if available, else from raw result, else fallback
             const errorMessage = (decryptedData && decryptedData.message) || 
                                 (result && result.message) || 
                                 `Login failed (Status: ${response.status})`;
@@ -188,7 +188,7 @@ export const handleLogout = async () => {
             }
         }
 
-        // Logic: Success if status is 'Success' or status_code 200
+        //Success if status is 'Success' or status_code 200
         const isSuccess = decryptedData.status === 'Success' || decryptedData.status === 'SUCCESS' || response.status === 200;
         
         return { 

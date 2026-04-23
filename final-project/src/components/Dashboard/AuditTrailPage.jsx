@@ -30,7 +30,7 @@ const AuditTrailPage = () => {
     const [currentPage, setCurrentPage] = useState(6);
     const [rowsPerPage, setRowsPerPage] = useState(3);
     const [goToPage, setGoToPage] = useState('9');
-    const [selectedRows, setSelectedRows] = useState(new Set([3])); // Default select row ID 3 as per screenshot
+    const [selectedRows, setSelectedRows] = useState(new Set([3])); 
     const totalPages = 50;
 
     const columns = [
@@ -79,7 +79,6 @@ const AuditTrailPage = () => {
     };
 
     const handleDownload = () => {
-        // Create dummy CSV content
         const headers = columns.map(col => col.label).join(',');
         const rows = MOCK_ROWS.map(row => 
             columns.map(col => row[col.key]).join(',')
@@ -98,7 +97,7 @@ const AuditTrailPage = () => {
     const renderPageNumbers = () => {
         const pages = [];
         
-        // Always show page 1
+        
         pages.push(
             <button 
                 key={1} 
@@ -130,7 +129,7 @@ const AuditTrailPage = () => {
             pages.push(<span key="dots2" className="page-dots">...</span>);
         }
 
-        // Always show last page
+        //show last page
         if (totalPages > 1) {
             pages.push(
                 <button 

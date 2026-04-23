@@ -15,7 +15,7 @@ const UserProfileDetails = ({ user, onBack }) => {
     const info5 = raw["5"] || {};
     const info6 = raw["6"] || {};
 
-    // Helper to get value from any nested object or root, matching keys from initialCbcFormState
+    // get value from any nested object or root, matching keys from initialCbcFormState
     const getVal = (key, fallback = 'N/A') => {
         const val = info1[key] || info2[key] || info3[key] || info4[key] || info5[key] || info6[key] || raw[key];
         return (val !== undefined && val !== null && val !== '') ? val : fallback;
